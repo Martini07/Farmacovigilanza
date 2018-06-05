@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Paziente {
     
-    private final long id; //to evaluate what to use as id
+    private final int id; //to evaluate what to use as id
     private final int annoNascita;
     private String provinciaRes;
     private String professione;
     private ArrayList<FattoreRischio> fattoriRischio=null;
     
-    public Paziente(long id, int annoNascita, String provinciaRes, String professione, ArrayList<FattoreRischio> fattoriRishio){
+    public Paziente(int id, int annoNascita, String provinciaRes, String professione, ArrayList<FattoreRischio> fattoriRishio){
         //add some necessary check on input...
         this.id=id;
         this.annoNascita=annoNascita;
@@ -20,7 +20,7 @@ public class Paziente {
     }
     
     //getter
-    public long getId(){ return this.id;}
+    public int getId(){ return this.id;}
     public int getAnnoNascita(){ return this.annoNascita;}
     public String getProvinciaRes(){ return this.provinciaRes;}
     public String getProfessione(){ return this.professione;}
@@ -33,16 +33,34 @@ public class Paziente {
     public void setProfessione(String professione){
         this.professione=professione;
     }
-    public void addFattoreRischio(FattoreRischio f){
-        this.fattoriRischio.add(f);
+    //aggiunta fattori rischio
+    public boolean addFattoreRischio(FattoreRischio f){
+        return this.fattoriRischio.add(f);
     }
-    public void addFattoriRischio(ArrayList<FattoreRischio> f){
-        this.fattoriRischio.addAll(f);
+    public boolean addFattoriRischio(ArrayList<FattoreRischio> f){
+        return this.fattoriRischio.addAll(f);
     }
-    public void removeFattoreRischio(FattoreRischio f){
-        this.fattoriRischio.remove(f);
+    //eliminazione fattori rischio
+    public boolean removeFattoreRischio(FattoreRischio f){
+        return this.fattoriRischio.remove(f);
     }
-    public void removeAllFattoriRischio(ArrayList<FattoreRischio> f){
-        this.fattoriRischio.removeAll(f);
+    public boolean removeAllFattoriRischio(ArrayList<FattoreRischio> f){
+        return this.fattoriRischio.removeAll(f);
+    }
+    
+    @Override
+    public String toString(){
+        return "["+id+"]:\n \t nato/a il "+annoNascita
+                + "\n \t residente in "+provinciaRes
+                + "\n \t professione: "+professione
+                + "\n \t fattori di rischio: "+fattoriRischio+"\n";
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(o != null && o instanceof Paziente){
+            return this.id==((Paziente) o).id;
+        }
+        return false;
     }
 }
