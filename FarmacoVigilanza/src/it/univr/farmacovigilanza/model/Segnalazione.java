@@ -1,4 +1,4 @@
-package farmacovigilanza.model;
+package it.univr.farmacovigilanza.model;
 
 import java.util.ArrayList;
 

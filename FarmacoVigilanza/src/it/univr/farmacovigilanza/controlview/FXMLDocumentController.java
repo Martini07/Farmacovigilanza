@@ -1,5 +1,8 @@
-package farmacovigilanza.controlview;
+package it.univr.farmacovigilanza.controlview;
 
+import it.univr.farmacovigilanza.dao.DAOFactory;
+import it.univr.farmacovigilanza.dao.UserDAO;
+import it.univr.farmacovigilanza.model.Utente;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -27,6 +30,12 @@ public class FXMLDocumentController implements Initializable {
         //disable login
         medico.setDisable(true);
         farmacologo.setDisable(true);
+        
+        //DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+        //UserDAO userDao = test.getUserDAO();
+        //Utente u = userDao.getUtente("fra", null);
+        
+        
         login.setText("Logged as medico");
     }
 

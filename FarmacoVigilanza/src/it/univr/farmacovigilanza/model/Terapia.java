@@ -1,4 +1,4 @@
-package farmacovigilanza.model;
+package it.univr.farmacovigilanza.model;
 
 public class Terapia {
     private final Paziente paziente;
