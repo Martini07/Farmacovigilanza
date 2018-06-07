@@ -37,8 +37,8 @@ public class UserDAOImpl implements UserDAO {
             Statement stmt = getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM UTENTE WHERE username='" + username + "'");
             if (rs.next()) {
-                Utente utente = new Utente(rs.getInt("idutente"), rs.getString("username"));
-                return utente;
+                Utente u = new Utente(rs.getInt("idutente"), rs.getString("username"));
+                return u;
                 //if (utente.pwd == password)
                 //    return utente;
                 //else 
