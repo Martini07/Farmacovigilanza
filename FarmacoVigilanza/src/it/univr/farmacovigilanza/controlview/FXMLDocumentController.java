@@ -4,7 +4,6 @@ import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
-import it.univr.farmacovigilanza.model.Farmacologo;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -37,9 +36,18 @@ public class FXMLDocumentController implements Initializable {
         //try login
         DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         UserDAO userDao = test.getUserDAO();
-        Utente u = userDao.getUtente(username.getText(), null);
+        Utente utente = userDao.getUtente(username.getText(), password.getText());
+        if (utente != null) {
+            if (utente instanceof Medico){
+                System.out.println("Medico");
+            } else { //Farmacologo
+                System.out.println("Farmacologo");
+            }
+        } else {
+            //login errata
+        }     
         //logged in
-        login.setText("Logged "+u.getUsername());
+        login.setText("Logged as " + utente.getNome() + " " + utente.getCognome());
         disableLoginFields();
         //enable logut
         logoutButton.setVisible(true);
