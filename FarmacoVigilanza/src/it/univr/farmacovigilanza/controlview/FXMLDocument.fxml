@@ -6,12 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="244.0" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
     <children>
-        <Label fx:id="login" layoutX="100.0" layoutY="28.0" minHeight="16" minWidth="69" />
+        <Label fx:id="login" layoutX="96.0" layoutY="25.0" minHeight="16" minWidth="69" />
       <TextField fx:id="username" layoutX="89.0" layoutY="66.0" promptText="username" />
       <Button fx:id="loginButton" layoutX="141.0" layoutY="138.0" mnemonicParsing="false" onAction="#doLogin" text="Login" />
-      <Button fx:id="logoutButton" disable="true" layoutX="255.0" layoutY="24.0" mnemonicParsing="false" onAction="#doLogout" text="Logout" visible="false" />
+      <Button fx:id="logoutButton" disable="true" layoutX="255.0" layoutY="15.0" mnemonicParsing="false" onAction="#doLogout" text="Logout" visible="false" />
       <PasswordField fx:id="password" layoutX="90.0" layoutY="100.0" promptText="password" />
+      <Button fx:id="pazientiButton" disable="true" layoutX="203.0" layoutY="24.0" mnemonicParsing="false" onAction="#showListaPazienti" text="Pazienti" visible="false" />
+      <ListView fx:id="listaPazienti" disable="true" layoutX="11.0" layoutY="29.0" prefHeight="162.0" prefWidth="295.0" visible="false" />
+      <ChoiceBox fx:id="sceltaPaziente" disable="true" layoutX="164.0" layoutY="33.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+      <Label fx:id="pazienteLabel" disable="true" layoutX="21.0" layoutY="37.0" minHeight="16" minWidth="69" text="Paziente" visible="false" />
+      <Label fx:id="reazioneAvversaLabel" disable="true" layoutX="21.0" layoutY="67.0" minHeight="16" minWidth="69" text="Reazione Avversa" visible="false" />
+      <ChoiceBox fx:id="sceltaReazioneAvversa" disable="true" layoutX="164.0" layoutY="63.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+      <DatePicker fx:id="dataReazioneAvversa" editable="false" layoutX="164.0" layoutY="98.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+      <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="21.0" layoutY="102.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
+      <Label fx:id="terapieLabel" disable="true" layoutX="21.0" layoutY="130.0" minHeight="16" minWidth="69" text="Terapie" visible="false" />
     </children>
 </AnchorPane>
