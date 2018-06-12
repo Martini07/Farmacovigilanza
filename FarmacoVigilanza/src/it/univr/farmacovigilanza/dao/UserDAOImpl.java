@@ -8,8 +8,6 @@ package it.univr.farmacovigilanza.dao;
 import it.univr.farmacovigilanza.model.Farmacologo;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Utente;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,25 +18,14 @@ import java.util.logging.Logger;
  *
  * @author Francesco
  */
-public class UserDAOImpl implements UserDAO {
+public class UserDAOImpl extends DAOImpl implements UserDAO {
 
-    private static final String SELECT_UTENTI= "SELECT * FROM UTENTE WHERE USERNAME = ? AND PASSWORD = ?";
-    
-    public static Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName(MySqlDAOFactory.DRIVER);
-            connection = DriverManager.getConnection(MySqlDAOFactory.URL, MySqlDAOFactory.USERNAME, MySqlDAOFactory.PASSWORD);
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return connection;
-    }
+    private static final String SEL_UTENTI= "SELECT * FROM UTENTE WHERE USERNAME = ? AND PASSWORD = ?";
 
     @Override
     public Utente getUtente(String username, String password) {
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(SELECT_UTENTI);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(SEL_UTENTI);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             ResultSet rs = preparedStatement.executeQuery();

@@ -12,13 +12,19 @@ package it.univr.farmacovigilanza.dao;
 public class MySqlDAOFactory extends DAOFactory {
     
     public static final String DRIVER = "com.mysql.jdbc.Driver";
-    public static final String URL = "jdbc:mysql://sql2.freesqldatabase.com:3306/sql2241488";
-    public static final String USERNAME = "sql2241488";
-    public static final String PASSWORD = "nH2!bI9!";
+    public static final String URL = "jdbc:mysql://db4free.net:3306/farmacovigilanza";
+    public static final String USERNAME = "farmacovigilanza";
+    public static final String PASSWORD = "farmacovigilanza";
 
     @Override
     public UserDAO getUserDAO() {
         return new UserDAOImpl();
     }
+    
+    @Override
+    public PazienteDAO getPazienteDAO() {
+        return new PazienteDAOImpl();
+    }
+    
     
 }
