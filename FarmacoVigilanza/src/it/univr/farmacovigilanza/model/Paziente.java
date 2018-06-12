@@ -4,48 +4,74 @@ import java.util.ArrayList;
 
 public class Paziente {
     
-    private final int id; //to evaluate what to use as id
-    private final int annoNascita;
+    private final int id;
+    private String nome;
+    private String cognome;
+    private int annoNascita;
     private String provinciaRes;
     private String professione;
-    private ArrayList<FattoreRischio> fattoriRischio=null;
-    
-    public Paziente(int id, int annoNascita, String provinciaRes, String professione, ArrayList<FattoreRischio> fattoriRishio){
-        //add some necessary check on input...
-        this.id=id;
-        this.annoNascita=annoNascita;
-        this.provinciaRes=provinciaRes;
-        this.professione=professione;
-        this.fattoriRischio=fattoriRischio;
+    private ArrayList<FattoreRischio> fattoriRischio;
+
+    public Paziente(int id, String nome, String cognome, int annoNascita, String provinciaRes, String professione, ArrayList<FattoreRischio> fattoriRischio) {
+        this.id = id;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.annoNascita = annoNascita;
+        this.provinciaRes = provinciaRes;
+        this.professione = professione;
+        this.fattoriRischio = fattoriRischio;
     }
-    
-    //getter
-    public int getId(){ return this.id;}
-    public int getAnnoNascita(){ return this.annoNascita;}
-    public String getProvinciaRes(){ return this.provinciaRes;}
-    public String getProfessione(){ return this.professione;}
-    public ArrayList<FattoreRischio> fattoriRischio(){ return this.fattoriRischio;}
-    
-    //setter
-    public void setProvinciaRes(String provincia){
-        this.provinciaRes=provincia;
+
+    public int getId() {
+        return id;
     }
-    public void setProfessione(String professione){
-        this.professione=professione;
+
+    public String getNome() {
+        return nome;
     }
-    //aggiunta fattori rischio
-    public boolean addFattoreRischio(FattoreRischio f){
-        return this.fattoriRischio.add(f);
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    public boolean addFattoriRischio(ArrayList<FattoreRischio> f){
-        return this.fattoriRischio.addAll(f);
+
+    public String getCognome() {
+        return cognome;
     }
-    //eliminazione fattori rischio
-    public boolean removeFattoreRischio(FattoreRischio f){
-        return this.fattoriRischio.remove(f);
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
     }
-    public boolean removeAllFattoriRischio(ArrayList<FattoreRischio> f){
-        return this.fattoriRischio.removeAll(f);
+
+    public int getAnnoNascita() {
+        return annoNascita;
+    }
+
+    public void setAnnoNascita(int annoNascita) {
+        this.annoNascita = annoNascita;
+    }
+
+    public String getProvinciaRes() {
+        return provinciaRes;
+    }
+
+    public void setProvinciaRes(String provinciaRes) {
+        this.provinciaRes = provinciaRes;
+    }
+
+    public String getProfessione() {
+        return professione;
+    }
+
+    public void setProfessione(String professione) {
+        this.professione = professione;
+    }
+
+    public ArrayList<FattoreRischio> getFattoriRischio() {
+        return fattoriRischio;
+    }
+
+    public void setFattoriRischio(ArrayList<FattoreRischio> fattoriRischio) {
+        this.fattoriRischio = fattoriRischio;
     }
     
     @Override
@@ -62,5 +88,10 @@ public class Paziente {
             return this.id==((Paziente) o).id;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
