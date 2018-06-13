@@ -1,24 +1,47 @@
 package it.univr.farmacovigilanza.model;
 
+import java.time.LocalDate;
+
 public class Terapia {
     private final Paziente paziente;
     private final Farmaco farmaco;
     private final int dose; //equivale a quantità
     private final float frequenzaGiornaliera; //decidere che tipo di dato da usare (esempio dose oraria 0.5 1 dose ogni due ore...)
-    //data inzio e fine
-    
-    public Terapia(Paziente p, Farmaco f,int d, int q){
-        paziente=p;
-        farmaco=f;
-        dose=d;
-        frequenzaGiornaliera=q;
+    private final LocalDate dataSegnalazione;
+    private final LocalDate dataReazione;
+
+    public Terapia(Paziente paziente, Farmaco farmaco, int dose, float frequenzaGiornaliera, LocalDate dataSegnalazione, LocalDate dataReazione) {
+        this.paziente = paziente;
+        this.farmaco = farmaco;
+        this.dose = dose;
+        this.frequenzaGiornaliera = frequenzaGiornaliera;
+        this.dataSegnalazione = dataSegnalazione;
+        this.dataReazione = dataReazione;
     }
-    
-    //getter
-    public Paziente getPaziente(){ return paziente;}
-    public Farmaco getFarmaco(){ return farmaco;}
-    public int getDose(){ return dose;}
-    public float getFrequenzaGiornaliera(){ return frequenzaGiornaliera;}
+
+    public Paziente getPaziente() {
+        return paziente;
+    }
+
+    public Farmaco getFarmaco() {
+        return farmaco;
+    }
+
+    public int getDose() {
+        return dose;
+    }
+
+    public float getFrequenzaGiornaliera() {
+        return frequenzaGiornaliera;
+    }
+
+    public LocalDate getDataSegnalazione() {
+        return dataSegnalazione;
+    }
+
+    public LocalDate getDataReazione() {
+        return dataReazione;
+    }
     
     @Override
     public String toString(){
