@@ -3,3 +3,6 @@
 /FarmacoVigilanza/dist/
 /FarmacoVigilanza/nbproject/project.properties
 FarmacoVigilanza/nbproject/UPDATED.TXT
+/FarmacoVigilanza/src/it/univr/farmacovigilanza/model/*.class
+/FarmacoVigilanza/src/it/univr/farmacovigilanza/dao/*.class
+/FarmacoVigilanza/src/it/univr/farmacovigilanza/controlview/*.class

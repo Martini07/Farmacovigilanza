@@ -48,6 +48,12 @@ public class FXMLDocumentController implements Initializable {
     private Label terapieLabel;
     @FXML
     private DatePicker dataReazioneAvversa;
+    @FXML
+    private Button segnalaPazienteButton;
+    @FXML
+    private Button terapiaPaziente;
+    @FXML
+    private Button aggiuntaPaziente;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -129,6 +135,10 @@ public class FXMLDocumentController implements Initializable {
         pazientiButton.setVisible(false);
         listaPazienti.setVisible(false);
         listaPazienti.setDisable(true);
+        segnalaPazienteButton.setDisable(true);
+        segnalaPazienteButton.setVisible(false);
+        terapiaPaziente.setDisable(true);
+        terapiaPaziente.setVisible(false);
         disableSegnalazione();
         listaPazienti.getItems().removeAll(listaPazienti.getItems()); //find a better way...
     }
@@ -136,6 +146,10 @@ public class FXMLDocumentController implements Initializable {
     private void enableSegnalazione(){
         pazienteLabel.setVisible(true);
         pazienteLabel.setDisable(false);
+        segnalaPazienteButton.setDisable(true);
+        segnalaPazienteButton.setVisible(false);
+        terapiaPaziente.setDisable(true);
+        terapiaPaziente.setVisible(false);
         reazioneAvversaLabel.setVisible(true);
         reazioneAvversaLabel.setDisable(false);
         dataReazioneAvversaLabel.setVisible(true);
@@ -148,6 +162,8 @@ public class FXMLDocumentController implements Initializable {
         sceltaReazioneAvversa.setDisable(false);
         dataReazioneAvversa.setVisible(true);
         dataReazioneAvversa.setDisable(false);
+        aggiuntaPaziente.setVisible(true);
+        aggiuntaPaziente.setDisable(false);
     }
     
     private void disableSegnalazione(){
@@ -167,6 +183,8 @@ public class FXMLDocumentController implements Initializable {
         sceltaReazioneAvversa.getItems().removeAll(sceltaReazioneAvversa.getItems());
         dataReazioneAvversa.setVisible(false);
         dataReazioneAvversa.setDisable(true);
+        aggiuntaPaziente.setVisible(false);
+        aggiuntaPaziente.setDisable(true);
     }
     
     @FXML
@@ -174,11 +192,15 @@ public class FXMLDocumentController implements Initializable {
         //disable lista pazienti button
         pazientiButton.setDisable(true);
         pazientiButton.setVisible(false);
+        segnalaPazienteButton.setDisable(false);
+        segnalaPazienteButton.setVisible(true);
+        terapiaPaziente.setDisable(false);
+        terapiaPaziente.setVisible(true);
         //disable segnalazione
         disableSegnalazione();
         listaPazienti.setVisible(true);
         listaPazienti.setDisable(false);
-        listaPazienti.setOnMousePressed(new ListViewHandler(listaPazienti, this));
+        //listaPazienti.setOnMousePressed(new ListViewHandler(listaPazienti, this));
         ArrayList<String> mieiPazienti= new ArrayList<>(); // to integrate with db
         mieiPazienti.add("Paziente 1");
         mieiPazienti.add("Paziente 2");
@@ -188,7 +210,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void enableSegnalazione(String s){
-        listaPazienti.setVisible(true);
+        listaPazienti.setVisible(false);
         listaPazienti.setDisable(true);
         //set this patient
         enableSegnalazione();
@@ -197,6 +219,18 @@ public class FXMLDocumentController implements Initializable {
         sceltaPaziente.setVisible(false);
         sceltaPaziente.setDisable(true);
         System.out.println("Paziente: "+s);
+    }
+
+    @FXML
+    private void segnalaPaziente(ActionEvent event) {
+    }
+
+    @FXML
+    private void addTerapiaPaziente(ActionEvent event) {
+    }
+
+    @FXML
+    private void addPaziente(ActionEvent event) {
     }
 
 }
