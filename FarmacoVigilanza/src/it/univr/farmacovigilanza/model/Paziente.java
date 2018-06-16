@@ -1,21 +1,17 @@
 package it.univr.farmacovigilanza.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Paziente {
     
     private final int id;
-    private String nome;
-    private String cognome;
     private int annoNascita;
     private String provinciaRes;
     private String professione;
-    private ArrayList<FattoreRischio> fattoriRischio;
+    private List<FattoreRischio> fattoriRischio;
 
-    public Paziente(int id, String nome, String cognome, int annoNascita, String provinciaRes, String professione, ArrayList<FattoreRischio> fattoriRischio) {
+    public Paziente(int id, int annoNascita, String provinciaRes, String professione, List<FattoreRischio> fattoriRischio) {
         this.id = id;
-        this.nome = nome;
-        this.cognome = cognome;
         this.annoNascita = annoNascita;
         this.provinciaRes = provinciaRes;
         this.professione = professione;
@@ -24,22 +20,6 @@ public class Paziente {
 
     public int getId() {
         return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
     }
 
     public int getAnnoNascita() {
@@ -66,11 +46,11 @@ public class Paziente {
         this.professione = professione;
     }
 
-    public ArrayList<FattoreRischio> getFattoriRischio() {
+    public List<FattoreRischio> getFattoriRischio() {
         return fattoriRischio;
     }
 
-    public void setFattoriRischio(ArrayList<FattoreRischio> fattoriRischio) {
+    public void setFattoriRischio(List<FattoreRischio> fattoriRischio) {
         this.fattoriRischio = fattoriRischio;
     }
     

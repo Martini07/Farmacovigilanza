@@ -1,26 +1,34 @@
 package it.univr.farmacovigilanza.model;
 
-
 public class FattoreRischio {
-    private final String nome;
-    private String descrizione;
-    private int livelloRischio;
     
-    public FattoreRischio(String nome, String descrizione, int livelloRischio){
-        //control input
-        this.nome=nome;
-        this.descrizione=descrizione;
-        this.livelloRischio=livelloRischio;
+    private final int id;
+    private final String nome;
+    private final String descrizione;
+    private final int livelloRischio;
+
+    public FattoreRischio(int id, String nome, String descrizione, int livelloRischio) {
+        this.id = id;
+        this.nome = nome;
+        this.descrizione = descrizione;
+        this.livelloRischio = livelloRischio;
+    }
+
+    public int getId() {
+        return id;
     }
     
-    //getter
-    public String getNome(){ return nome;}
-    public String getDescrizione(){ return descrizione;}
-    public int getLivelloRischio(){ return livelloRischio;}
-    
-    //setter
-    public void setDescrizione(String s){ descrizione=s;}
-    public void setLivelloRischio(int n){ livelloRischio=n;}
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public int getLivelloRischio() {
+        return livelloRischio;
+    }
     
     @Override
     public String toString(){
@@ -33,5 +41,10 @@ public class FattoreRischio {
             return this.nome.equals(((FattoreRischio) o).nome);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
