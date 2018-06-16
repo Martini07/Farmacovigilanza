@@ -1,32 +1,36 @@
 package it.univr.farmacovigilanza.model;
-import java.lang.Exception;
 
 public class ReazioneAvversa {
     
+    private final int id;
     private final String nome;
-    private int livelloGravita;
-    private String descrizione;
-    
-    public ReazioneAvversa(String nome, int livelloGravita, String descriozione) throws IllegalArgumentException{
-        //add some check on input
-        this.nome=nome;
-        this.livelloGravita=livelloGravita;
-        this.descrizione=descrizione;
-        if(livelloGravita<1 || livelloGravita>5) throw new IllegalArgumentException("Livello gravità deve essere compreso tra 1 e 5");
+    private final String descrizione;
+    private final int livelloGravita;
+
+    public ReazioneAvversa(int id, String nome, String descrizione, int livelloGravita) {
+        if (livelloGravita < 1 || livelloGravita > 5) 
+            throw new IllegalArgumentException("Livello gravità deve essere compreso tra 1 e 5");
+        this.id = id;
+        this.nome = nome;
+        this.livelloGravita = livelloGravita;
+        this.descrizione = descrizione;
     }
-    
-    //getter
-    public String getNome(){ return this.nome;}
-    public int getLivelloGravita(){ return this.livelloGravita;}
-    public String getDescrizione(){ return this.descrizione;}
-    
-    //setter
-    public void setLivelloGravita(int l) throws IllegalArgumentException{
-        if(l<1 || l>5) throw new IllegalArgumentException("Livello gravità deve essere compreso tra 1 e 5");
-        livelloGravita=l;
+
+    public int getId() {
+        return id;
     }
-    
-    public void setDescrizione(String s){ descrizione=s; }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public int getLivelloGravita() {
+        return livelloGravita;
+    }
     
     @Override
     public String toString(){
@@ -35,9 +39,14 @@ public class ReazioneAvversa {
     
     @Override
     public boolean equals(Object o){
-        if(o != null && o instanceof ReazioneAvversa){
+        if(o instanceof ReazioneAvversa){
             return this.nome.equals(((ReazioneAvversa) o).nome);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }
