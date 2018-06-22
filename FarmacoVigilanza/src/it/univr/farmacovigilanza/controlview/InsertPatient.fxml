@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
-    <children>
-        <Label fx:id="login" layoutX="221.0" layoutY="18.0" minHeight="16" minWidth="69" />
-      <TextField fx:id="username" layoutX="175.0" layoutY="112.0" promptText="username" />
-      <Button fx:id="loginButton" layoutX="229.0" layoutY="210.0" mnemonicParsing="false" onAction="#doLogin" text="Login" />
-      <Button fx:id="logoutButton" disable="true" layoutX="441.0" layoutY="14.0" mnemonicParsing="false" onAction="#doLogout" text="Logout" visible="false" />
-      <PasswordField fx:id="password" layoutX="176.0" layoutY="159.0" promptText="password" />
-      <Button fx:id="pazientiButton" disable="true" layoutX="76.0" layoutY="10.0" mnemonicParsing="false" onAction="#showListaPazienti" text="Pazienti" visible="false" />
-      <ListView fx:id="listaPazienti" disable="true" layoutX="11.0" layoutY="52.0" prefHeight="313.0" prefWidth="417.0" visible="false" />
-      <ChoiceBox fx:id="sceltaPaziente" disable="true" layoutX="255.0" layoutY="61.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-      <Label fx:id="pazienteLabel" disable="true" layoutX="78.0" layoutY="66.0" minHeight="16" minWidth="69" text="Paziente" visible="false" />
-      <Label fx:id="reazioneAvversaLabel" disable="true" layoutX="76.0" layoutY="114.0" minHeight="16" minWidth="69" text="Reazione Avversa" visible="false" />
-      <ChoiceBox fx:id="sceltaReazioneAvversa" disable="true" layoutX="254.0" layoutY="109.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-      <DatePicker fx:id="dataReazioneAvversa" disable="true" editable="false" layoutX="254.0" layoutY="157.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-      <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="78.0" layoutY="162.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
-      <Label fx:id="terapieLabel" disable="true" layoutX="79.0" layoutY="207.0" minHeight="16" minWidth="69" text="Terapie" visible="false" />
-      <Button fx:id="segnalaPazienteButton" disable="true" layoutX="433.0" layoutY="76.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
-      <Button fx:id="terapiaPaziente" disable="true" layoutX="433.0" layoutY="113.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
-      <Button fx:id="aggiuntaPaziente" disable="true" layoutX="404.0" layoutY="62.0" mnemonicParsing="false" onAction="#addPaziente" text="+" visible="false" />
-    </children>
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.InsertPatientController">
+   <children>
+      <Button fx:id="insertButton" layoutX="229.0" layoutY="314.0" mnemonicParsing="false" onAction="#insertPatient" text="Inserisci" />
+      <Label layoutX="68.0" layoutY="63.0" text="Anno nascita" />
+      <Label layoutX="70.0" layoutY="89.0" text="Provincia residenza" />
+      <Label layoutX="70.0" layoutY="119.0" text="Professione" />
+      <ChoiceBox fx:id="annoNascita" layoutX="308.0" layoutY="61.0" maxHeight="100.0" prefHeight="26.0" prefWidth="118.0" />
+      <ChoiceBox fx:id="provinciaRes" layoutX="340.0" layoutY="92.0" maxHeight="100.0" prefHeight="26.0" prefWidth="85.0" />
+      <TextField fx:id="professione" layoutX="252.0" layoutY="127.0" />
+      <Label layoutX="70.0" layoutY="162.0" text="Fattori rischio" />
+      <CheckBox fx:id="fumatore" layoutX="66.0" layoutY="185.0" mnemonicParsing="false" text="Fumatore" />
+      <CheckBox fx:id="sovrappeso" layoutX="69.0" layoutY="210.0" mnemonicParsing="false" onAction="#sovrappesoSelected" text="Sovrappeso" />
+      <CheckBox fx:id="sottopeso" layoutX="65.0" layoutY="235.0" mnemonicParsing="false" onAction="#sottopesoSelected" text="Sottopeso" />
+      <CheckBox fx:id="farmaci" layoutX="64.0" layoutY="258.0" mnemonicParsing="false" text="Farmaci" />
+      <CheckBox fx:id="iperteso" layoutX="177.0" layoutY="187.0" mnemonicParsing="false" text="Iperteso" />
+      <CheckBox fx:id="sedentario" layoutX="178.0" layoutY="215.0" mnemonicParsing="false" text="Sedentario" />
+      <CheckBox fx:id="asmatico" layoutX="175.0" layoutY="240.0" mnemonicParsing="false" text="Asmatico" />
+      <CheckBox fx:id="cardiopatico" layoutX="179.0" layoutY="263.0" mnemonicParsing="false" text="Cardiopatico" />
+      <CheckBox fx:id="diabetico" layoutX="301.0" layoutY="189.0" mnemonicParsing="false" text="Diabetico" />
+      <CheckBox fx:id="droghe" layoutX="299.0" layoutY="216.0" mnemonicParsing="false" text="Dipendenza da droghe" />
+      <CheckBox fx:id="alcool" layoutX="301.0" layoutY="240.0" mnemonicParsing="false" text="Dipendenza da alcool" />
+      <CheckBox fx:id="anemico" layoutX="309.0" layoutY="264.0" mnemonicParsing="false" text="Anemico" />
+      <CheckBox fx:id="esposto" layoutX="62.0" layoutY="290.0" mnemonicParsing="false" text="Esposto a patogeni/inquinanti/radiazioni" />
+      <CheckBox fx:id="lavoroRischio" layoutX="374.0" layoutY="293.0" mnemonicParsing="false" text="Lavoro a rischio" />
+   </children>
 </AnchorPane>

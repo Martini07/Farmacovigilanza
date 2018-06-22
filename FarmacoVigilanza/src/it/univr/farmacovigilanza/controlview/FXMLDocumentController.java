@@ -10,16 +10,21 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class FXMLDocumentController implements Initializable {
-    private Utente logged=null;
+    private static Utente logged=null;
     @FXML
     private Label login;
     @FXML
@@ -231,6 +236,20 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void addPaziente(ActionEvent event) {
+            try{
+                Parent root = FXMLLoader.load(getClass().getResource("InsertPatient.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Inserimento paziente");
+                stage.setScene(new Scene(root));
+                stage.show();
+                //((Node)(event.getSource())).getScene().getWindow().hide();
+            }catch(Exception e){
+                System.out.println("Creazione finestra: "+e);
+            }
+    }
+    
+    public static Utente getUtente(){
+        return logged;
     }
 
 }

@@ -1,5 +1,6 @@
 package it.univr.farmacovigilanza.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Paziente {
@@ -9,6 +10,11 @@ public class Paziente {
     private String provinciaRes;
     private String professione;
     private List<FattoreRischio> fattoriRischio;
+    public static final List<String> sigleProvince = Arrays.asList("AG","AL","AN","AO","AP","AQ","AR","AT","AV","BA","BG","BI","BL","BN","BO","BR","BS","BT","BZ"
+,"CA","CB","CE","CH","CI","CL","CN","CO","CR","CS","CT","CV","CZ","EE","EN","FC","FE","FG","FI","FM","FO","FR","GE","GO","GR","IM","IS","KR","LC","LE","LI",
+"LO","LT","LU","MB","MC","ME","MI","MN","MO","MS","MT","NA","NO","NU","OG","OR","OT","PA","PC","PD","PE","PG","PI","PN","PO","PR","PS","PT","PU","PV","PZ",
+"RA","RC","RE","RG","RI","RM","RN","RO","RS","SA","SI","SO","SP","SR","SS","SU","SV","TA","TE","TN","TO","TP","TR","TS","TV","UD","VA","VB","VC","VE","VI",
+"VR","VS","VT","VV");
 
     public Paziente(int id, int annoNascita, String provinciaRes, String professione, List<FattoreRischio> fattoriRischio) {
         this.id = id;
@@ -18,6 +24,14 @@ public class Paziente {
         this.fattoriRischio = fattoriRischio;
     }
 
+    public Paziente(int annoNascita, String provinciaRes, String professione, List<FattoreRischio> fattoriRischio) {
+        this.id=-1;
+        this.annoNascita = annoNascita;
+        this.provinciaRes = provinciaRes;
+        this.professione = professione;
+        this.fattoriRischio = fattoriRischio;
+    }
+    
     public int getId() {
         return id;
     }
