@@ -15,9 +15,18 @@ import java.util.logging.Logger;
  *
  * @author Francesco
  */
-public abstract class DAOImpl {
+public abstract class Connessione {
 
-    public static Connection getConnection() {
+    private static Connection instance = null;
+
+    public static Connection getInstance() {
+        if (instance == null) {
+            instance = getConnection(); 
+        }
+        return instance;
+    }
+
+    private static Connection getConnection() {
         Connection connection = null;
         try {
             Class.forName(MySqlDAOFactory.DRIVER);
@@ -27,4 +36,5 @@ public abstract class DAOImpl {
         }
         return connection;
     }
+
 }

@@ -18,14 +18,14 @@ import java.util.logging.Logger;
  *
  * @author Francesco
  */
-public class UserDAOImpl extends DAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO {
 
     private static final String SEL_UTENTI= "SELECT * FROM UTENTE WHERE USERNAME = ? AND PASSWORD = ?";
 
     @Override
     public Utente getUtente(String username, String password) {
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(SEL_UTENTI);
+            PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_UTENTI);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
             ResultSet rs = preparedStatement.executeQuery();

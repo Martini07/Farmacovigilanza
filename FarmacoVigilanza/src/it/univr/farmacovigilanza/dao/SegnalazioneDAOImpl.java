@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Francesco
  */
-public class SegnalazioneDAOImpl extends DAOImpl implements SegnalazioneDAO {
+public class SegnalazioneDAOImpl implements SegnalazioneDAO {
 
     private static final String SEL_REAZIONI_AVVERSE = "SELECT * FROM REAZIONE";
     
@@ -21,7 +21,7 @@ public class SegnalazioneDAOImpl extends DAOImpl implements SegnalazioneDAO {
     public List<ReazioneAvversa> getReazioniAvverse() {
         List<ReazioneAvversa> reazioni = new ArrayList();
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(SEL_REAZIONI_AVVERSE);
+            PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_REAZIONI_AVVERSE);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 reazioni.add(new ReazioneAvversa(rs.getInt("IDREAZIONE"),

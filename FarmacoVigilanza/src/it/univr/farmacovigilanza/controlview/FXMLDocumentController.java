@@ -5,6 +5,7 @@ import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Farmacologo;
+import it.univr.farmacovigilanza.model.Paziente;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -21,6 +22,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class FXMLDocumentController implements Initializable {
@@ -241,7 +243,9 @@ public class FXMLDocumentController implements Initializable {
                 Stage stage = new Stage();
                 stage.setTitle("Inserimento paziente");
                 stage.setScene(new Scene(root));
-                stage.show();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+                Paziente pazienteInserito = (Paziente) stage.getUserData();
                 //((Node)(event.getSource())).getScene().getWindow().hide();
             }catch(Exception e){
                 System.out.println("Creazione finestra: "+e);

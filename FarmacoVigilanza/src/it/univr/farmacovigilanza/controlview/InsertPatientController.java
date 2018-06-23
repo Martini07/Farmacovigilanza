@@ -3,8 +3,6 @@ package it.univr.farmacovigilanza.controlview;
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.model.FattoreRischio;
-import it.univr.farmacovigilanza.dao.PazienteDAOImpl;
-import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.Utente;
@@ -22,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Window;
 
 public class InsertPatientController implements Initializable{
 
@@ -105,7 +104,11 @@ public class InsertPatientController implements Initializable{
             if(!pazDao.salvaPaziente(p, m.getIdUtente())){
                 System.out.println("Errore");
                 //errore salva paziente
-            };
+            } else {
+                Window window = insertButton.getScene().getWindow();
+                window.setUserData(p);
+            }
+            
         }
     }
 

@@ -13,7 +13,7 @@ import it.univr.farmacovigilanza.model.Terapia;
  *
  * @author Francesco
  */
-public class TerapiaDAOImpl extends DAOImpl implements TerapiaDAO {
+public class TerapiaDAOImpl implements TerapiaDAO {
     
     private static final String INS_TERAPIA = "INSERT INTO PAZIENTE(ANNO_NASCITA, PROV_RESIDENZA, PROFESSIONE, IDMEDICO) VALUES(?, ?, ?, ?)";
     private static final String SEL_TERAPIA_MEDICO = "INSERT INTO TERAPIA(IDFARMACO, DATA_INIZIO, DATA_FINE, DOSE, FREQUENZA, IDPAZIENTE) VALUES(?, ?, ?, ?, ?, ?)";
@@ -28,7 +28,7 @@ public class TerapiaDAOImpl extends DAOImpl implements TerapiaDAO {
     public boolean salvaTerapia(Terapia terapia) {
         boolean result = true;
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(INS_TERAPIA);
+            PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(INS_TERAPIA);
             preparedStatement.setInt(1, terapia.getFarmaco().getId());
             preparedStatement.setDate(2, Date.valueOf(terapia.getDataInizio()));
             preparedStatement.setDate(3, Date.valueOf(terapia.getDataFine()));
