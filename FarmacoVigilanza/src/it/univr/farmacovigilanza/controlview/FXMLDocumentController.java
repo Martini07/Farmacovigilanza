@@ -33,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class FXMLDocumentController implements Initializable {
     private static Utente logged=null;
@@ -266,6 +267,21 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void addTerapiaPaziente(ActionEvent event) {
+        Paziente selected = grid.getSelectionModel().getSelectedItem();
+        if(selected != null){
+            try{
+                Parent root = FXMLLoader.load(getClass().getResource("InsertTerapy.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Inserimento terapia");
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                Pair<Medico,Paziente> data = new Pair<Medico,Paziente>((Medico) logged, selected);
+                stage.setUserData(selected);
+                stage.showAndWait();
+            }catch(Exception e){
+                System.err.println("Creazione finestra: "+e);
+            }
+        }
     }
 
     @FXML
