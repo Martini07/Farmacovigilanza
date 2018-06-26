@@ -270,13 +270,15 @@ public class FXMLDocumentController implements Initializable {
         Paziente selected = grid.getSelectionModel().getSelectedItem();
         if(selected != null){
             try{
-                Parent root = FXMLLoader.load(getClass().getResource("InsertTerapy.fxml"));
+                FXMLLoader loader =  new FXMLLoader(getClass().getResource("InsertTerapy.fxml"));
+                InsertTerapyController controller = new InsertTerapyController(new Pair<Medico,Paziente>((Medico) logged, selected));
+                loader.setController(controller);
+                Parent root = loader.load();
+                
                 Stage stage = new Stage();
                 stage.setTitle("Inserimento terapia");
                 stage.setScene(new Scene(root));
                 stage.initModality(Modality.APPLICATION_MODAL);
-                Pair<Medico,Paziente> data = new Pair<Medico,Paziente>((Medico) logged, selected);
-                stage.setUserData(selected);
                 stage.showAndWait();
             }catch(Exception e){
                 System.err.println("Creazione finestra: "+e);

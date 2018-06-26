@@ -43,10 +43,14 @@ public class InsertTerapyController implements Initializable{
     @FXML
     private DatePicker dataFine;
     
+    private final Pair<Medico,Paziente> data;
+    
+    public InsertTerapyController(Pair<Medico,Paziente> data){
+        this.data = data;
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Window window = frequenza.getScene().getWindow();
-        Pair<Medico,Paziente> data= (Pair<Medico,Paziente>) window.getUserData();
         DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         PazienteDAO pazDao = test.getPazienteDAO();
         ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(data.getKey().getIdUtente());
