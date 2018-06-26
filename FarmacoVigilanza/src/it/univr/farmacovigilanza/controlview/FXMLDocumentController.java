@@ -218,10 +218,10 @@ public class FXMLDocumentController implements Initializable {
         terapieLabel.setDisable(true);
         sceltaPaziente.setVisible(false);
         sceltaPaziente.setDisable(true);
-        sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
+        //sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
         sceltaReazioneAvversa.setVisible(false);
         sceltaReazioneAvversa.setDisable(true);
-        sceltaReazioneAvversa.getItems().removeAll(sceltaReazioneAvversa.getItems());
+        //sceltaReazioneAvversa.getItems().removeAll(sceltaReazioneAvversa.getItems());
         dataReazioneAvversa.setVisible(false);
         dataReazioneAvversa.setDisable(true);
         aggiuntaPaziente.setVisible(false);
@@ -251,13 +251,17 @@ public class FXMLDocumentController implements Initializable {
     public void enableSegnalazione(int id){
         grid.setVisible(false);
         grid.setDisable(true);
-        sceltaPaziente.setValue(sceltaPaziente.getItems().indexOf(id));
         //set this patient
+        sceltaPaziente.setValue(id);
         enableSegnalazione();
     }
 
     @FXML
     private void segnalaPaziente(ActionEvent event) {
+        Paziente selected = grid.getSelectionModel().getSelectedItem();
+        if(selected != null){
+            enableSegnalazione(selected.getId());
+        }
     }
 
     @FXML
