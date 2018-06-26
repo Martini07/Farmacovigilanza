@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Paziente {
     
-    private final int id;
+    private int id;
     private int annoNascita;
     private String provinciaRes;
     private String professione;
@@ -34,6 +34,10 @@ public class Paziente {
     
     public int getId() {
         return id;
+    }
+    
+    public void setId(int id){
+        this.id=id;
     }
 
     public int getAnnoNascita() {

@@ -8,6 +8,7 @@ package it.univr.farmacovigilanza.dao;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import java.util.List;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -15,9 +16,9 @@ import java.util.List;
  */
 public interface PazienteDAO {
     
-    public List<Paziente> getPazienti(int idMedico);
+    public ObservableList<Paziente> getPazienti(int idMedico);
     public List<FattoreRischio> getFattoriRischio(int idPaziente);
     public List<FattoreRischio> getFattoriRischio();
-    public boolean salvaPaziente(Paziente paziente, int idMedico);
+    public int salvaPaziente(Paziente paziente, int idMedico);
 
 }

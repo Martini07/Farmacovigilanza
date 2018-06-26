@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -29,13 +31,13 @@ public class PazienteDAOImpl implements PazienteDAO {
     private static final String INS_FATT_PAZIENTE = "INSERT INTO RISCHIO_PAZIENTE(IDPAZIENTE, IDFATTORE) VALUES(?, ?)";
 
     @Override
-    public List<Paziente> getPazienti(int idMedico) {
-        List<Paziente> pazienti = new ArrayList();
+    public ObservableList<Paziente> getPazienti(int idMedico) {
+        ObservableList<Paziente> pazienti = FXCollections.observableArrayList();
         try {
             PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(SEL_PAZIENTE_MEDICO);
             preparedStatement.setInt(1, idMedico);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 int idPaziente = rs.getInt("IDPAZIENTE");
                 pazienti.add(new Paziente(rs.getInt("IDPAZIENTE"),
                         rs.getInt("ANNO_NASCITA"),
@@ -87,8 +89,8 @@ public class PazienteDAOImpl implements PazienteDAO {
     }
 
     @Override
-    public boolean salvaPaziente(Paziente paziente, int idMedico) {
-        boolean result = true;
+    public int salvaPaziente(Paziente paziente, int idMedico) {
+        int result = -1;
         try {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(INS_PAZIENTE, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, paziente.getAnnoNascita());
@@ -100,6 +102,7 @@ public class PazienteDAOImpl implements PazienteDAO {
             ResultSet rs = preparedStatement.getGeneratedKeys();
             if(rs.next()) {
                 int idPaziente = rs.getInt(1);
+                result = idPaziente;
                 List<FattoreRischio> fattoriRischio = paziente.getFattoriRischio();
                 preparedStatement =  Connessione.getInstance().prepareStatement(INS_FATT_PAZIENTE);
                 for (FattoreRischio fattoreRischio : fattoriRischio) {
@@ -109,7 +112,6 @@ public class PazienteDAOImpl implements PazienteDAO {
             }
             
         } catch (SQLException ex) {
-            result = false;
             Logger.getLogger(PazienteDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;

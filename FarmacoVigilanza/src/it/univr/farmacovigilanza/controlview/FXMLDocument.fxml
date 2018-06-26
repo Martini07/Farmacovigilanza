@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -25,8 +27,17 @@
       <DatePicker fx:id="dataReazioneAvversa" disable="true" editable="false" layoutX="254.0" layoutY="157.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
       <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="78.0" layoutY="162.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
       <Label fx:id="terapieLabel" disable="true" layoutX="79.0" layoutY="207.0" minHeight="16" minWidth="69" text="Terapie" visible="false" />
-      <Button fx:id="segnalaPazienteButton" disable="true" layoutX="433.0" layoutY="76.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
-      <Button fx:id="terapiaPaziente" disable="true" layoutX="433.0" layoutY="113.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
+      <Button fx:id="segnalaPazienteButton" disable="true" layoutX="35.0" layoutY="16.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
+      <Button fx:id="terapiaPaziente" disable="true" layoutX="139.0" layoutY="17.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
       <Button fx:id="aggiuntaPaziente" disable="true" layoutX="404.0" layoutY="62.0" mnemonicParsing="false" onAction="#addPaziente" text="+" visible="false" />
+      <TableView fx:id="grid" layoutX="19.0" layoutY="52.0" prefHeight="313.0" prefWidth="493.0" visible="false">
+        <columns>
+          <TableColumn fx:id="id" prefWidth="40.0" text="ID" />
+          <TableColumn fx:id="anno" prefWidth="105.0" text="Anno nascita" />
+            <TableColumn fx:id="provincia" prefWidth="90.0" text="Residenza" />
+            <TableColumn fx:id="professione" prefWidth="102.0" text="Professione" />
+            <TableColumn fx:id="fattoriRischio" prefWidth="155.0" text="Fattori rischio" />
+        </columns>
+      </TableView>
     </children>
 </AnchorPane>

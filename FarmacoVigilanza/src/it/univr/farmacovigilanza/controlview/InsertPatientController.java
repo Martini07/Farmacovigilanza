@@ -60,6 +60,7 @@ public class InsertPatientController implements Initializable{
     private CheckBox esposto;
     @FXML
     private CheckBox lavoroRischio;
+    ObservableList<Integer> pazientiId = FXCollections.observableArrayList();
 
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     @Override
@@ -101,12 +102,15 @@ public class InsertPatientController implements Initializable{
             Medico m = (Medico) u;
             DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
             PazienteDAO pazDao = test.getPazienteDAO();
-            if(!pazDao.salvaPaziente(p, m.getIdUtente())){
+            int id=pazDao.salvaPaziente(p, m.getIdUtente());
+            if(id== -1 ){
                 System.out.println("Errore");
                 //errore salva paziente
             } else {
+                p.setId(id);
+                pazientiId.add(id);
                 Window window = insertButton.getScene().getWindow();
-                window.setUserData(p);
+                window.setUserData(pazientiId);
             }
             
         }
@@ -128,6 +132,8 @@ public class InsertPatientController implements Initializable{
     }
     
     private void clear(){
+        annoNascita.setValue(annoNascita.getItems().get(0));
+        provinciaRes.setValue(provinciaRes.getItems().get(0));
         professione.clear();
         for(CheckBox c : checkBoxes) c.setSelected(false);
     }

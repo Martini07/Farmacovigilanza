@@ -1,14 +1,19 @@
 package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.dao.DAOFactory;
+import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Farmacologo;
+import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +26,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -40,9 +49,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button pazientiButton;
     @FXML
-    private ListView<String> listaPazienti;
-    @FXML
-    private ChoiceBox<?> sceltaPaziente;
+    private ChoiceBox<Integer> sceltaPaziente;
     @FXML
     private Label pazienteLabel;
     @FXML
@@ -61,10 +68,28 @@ public class FXMLDocumentController implements Initializable {
     private Button terapiaPaziente;
     @FXML
     private Button aggiuntaPaziente;
+    @FXML
+    private TableView<Paziente> grid;
+    @FXML
+    private ListView<?> listaPazienti;
+    @FXML
+    private TableColumn<Paziente, Integer> id;
+    @FXML
+    private TableColumn<Paziente, Integer> anno;
+    @FXML
+    private TableColumn<Paziente, String> provincia;
+    @FXML
+    private TableColumn<Paziente, String> professione;
+    @FXML
+    private TableColumn<Paziente, List<FattoreRischio>> fattoriRischio;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        anno.setCellValueFactory(new PropertyValueFactory<>("annoNascita"));
+        provincia.setCellValueFactory(new PropertyValueFactory<>("provinciaRes"));
+        professione.setCellValueFactory(new PropertyValueFactory<>("professione"));
+        fattoriRischio.setCellValueFactory(new PropertyValueFactory<>("fattoriRischio"));
     }    
 
     @FXML
@@ -134,20 +159,29 @@ public class FXMLDocumentController implements Initializable {
     private void enableMedicoInterface(){
         pazientiButton.setDisable(false);
         pazientiButton.setVisible(true);
+        //Obtain pazienti
+        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+        PazienteDAO pazDao = test.getPazienteDAO();
+        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(((Medico) logged).getIdUtente());
+        ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
+        for(Paziente p: mieiPazienti){
+            idPazienti.add(p.getId());
+        }
+        sceltaPaziente.setItems(idPazienti);
         enableSegnalazione();
     }
 
     private void disableMedicoInterface(){
         pazientiButton.setDisable(true);
         pazientiButton.setVisible(false);
-        listaPazienti.setVisible(false);
-        listaPazienti.setDisable(true);
+        grid.setVisible(false);
+        grid.setDisable(true);
         segnalaPazienteButton.setDisable(true);
         segnalaPazienteButton.setVisible(false);
         terapiaPaziente.setDisable(true);
         terapiaPaziente.setVisible(false);
         disableSegnalazione();
-        listaPazienti.getItems().removeAll(listaPazienti.getItems()); //find a better way...
+        grid.getItems().removeAll(grid.getItems());
     }
     
     private void enableSegnalazione(){
@@ -205,27 +239,21 @@ public class FXMLDocumentController implements Initializable {
         terapiaPaziente.setVisible(true);
         //disable segnalazione
         disableSegnalazione();
-        listaPazienti.setVisible(true);
-        listaPazienti.setDisable(false);
+        grid.setVisible(true);
+        grid.setDisable(false);
         //listaPazienti.setOnMousePressed(new ListViewHandler(listaPazienti, this));
-        ArrayList<String> mieiPazienti= new ArrayList<>(); // to integrate with db
-        mieiPazienti.add("Paziente 1");
-        mieiPazienti.add("Paziente 2");
-        mieiPazienti.add("Paziente 3");
-        mieiPazienti.add("Paziente 4");
-        listaPazienti.getItems().addAll(mieiPazienti);
+        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+        PazienteDAO pazDao = test.getPazienteDAO();
+        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(((Medico) logged).getIdUtente());
+        grid.setItems(mieiPazienti);
     }
     
-    public void enableSegnalazione(String s){
-        listaPazienti.setVisible(false);
-        listaPazienti.setDisable(true);
+    public void enableSegnalazione(int id){
+        grid.setVisible(false);
+        grid.setDisable(true);
+        sceltaPaziente.setValue(sceltaPaziente.getItems().indexOf(id));
         //set this patient
         enableSegnalazione();
-        
-        //disable choicebox on patient
-        sceltaPaziente.setVisible(false);
-        sceltaPaziente.setDisable(true);
-        System.out.println("Paziente: "+s);
     }
 
     @FXML
@@ -245,8 +273,10 @@ public class FXMLDocumentController implements Initializable {
                 stage.setScene(new Scene(root));
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
-                Paziente pazienteInserito = (Paziente) stage.getUserData();
-                //((Node)(event.getSource())).getScene().getWindow().hide();
+                //update choicebox with new pazienti
+                ObservableList<Integer> idInseriti = (ObservableList<Integer>) stage.getUserData();
+                sceltaPaziente.getItems().addAll(idInseriti);
+                enableSegnalazione(idInseriti.get(idInseriti.size()-1));
             }catch(Exception e){
                 System.out.println("Creazione finestra: "+e);
             }
