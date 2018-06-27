@@ -1,6 +1,8 @@
 package it.univr.farmacovigilanza.model;
 
-public abstract class Farmaco implements Iterable{
+import java.util.Iterator;
+
+public class Farmaco implements Iterable{
    
     private final int id;
     private final String nome;
@@ -71,6 +73,12 @@ public abstract class Farmaco implements Iterable{
     @Override
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public Iterator iterator() {
+        //TODO
+        return null;
     }
 
 }

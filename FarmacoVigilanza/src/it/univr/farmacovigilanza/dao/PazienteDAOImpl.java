@@ -46,7 +46,7 @@ public class PazienteDAOImpl implements PazienteDAO {
                         getFattoriRischio(idPaziente)));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PazienteDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pazienti;
     }
