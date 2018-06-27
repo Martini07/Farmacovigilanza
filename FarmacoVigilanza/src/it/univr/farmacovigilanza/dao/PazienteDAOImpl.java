@@ -77,8 +77,8 @@ public class PazienteDAOImpl implements PazienteDAO {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_FATTORI_RISCHIO_PAZIENTE);
             preparedStatement.setInt(1, idPaziente);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                fattoriRischio.add(new FattoreRischio(rs.getInt("IDATTORE"),
+            while (rs.next()) {
+                fattoriRischio.add(new FattoreRischio(rs.getInt("IDFATTORE"),
                         rs.getString("NOME"),
                         rs.getString("DESCRIZIONE"),
                         rs.getInt("LIVELLO")));
@@ -95,8 +95,8 @@ public class PazienteDAOImpl implements PazienteDAO {
         try {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_FATTORI_RISCHIO);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                fattoriRischio.add(new FattoreRischio(rs.getInt("IDATTORE"),
+            while (rs.next()) {
+                fattoriRischio.add(new FattoreRischio(rs.getInt("IDFATTORE"),
                         rs.getString("NOME"),
                         rs.getString("DESCRIZIONE"),
                         rs.getInt("LIVELLO")));
@@ -109,7 +109,7 @@ public class PazienteDAOImpl implements PazienteDAO {
 
     @Override
     public int salvaPaziente(Paziente paziente, int idMedico) {
-        int result = -1;
+        int idPazienteCreato = -1;
         try {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(INS_PAZIENTE, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, paziente.getAnnoNascita());
@@ -120,19 +120,19 @@ public class PazienteDAOImpl implements PazienteDAO {
             
             ResultSet rs = preparedStatement.getGeneratedKeys();
             if(rs.next()) {
-                int idPaziente = rs.getInt(1);
-                result = idPaziente;
+                idPazienteCreato = rs.getInt(1);
                 List<FattoreRischio> fattoriRischio = paziente.getFattoriRischio();
                 preparedStatement =  Connessione.getInstance().prepareStatement(INS_FATT_PAZIENTE);
                 for (FattoreRischio fattoreRischio : fattoriRischio) {
-                    preparedStatement.setInt(1, fattoreRischio.getId());
-                    preparedStatement.setInt(2, idPaziente);
+                    preparedStatement.setInt(1, idPazienteCreato);
+                    preparedStatement.setInt(2, fattoreRischio.getId());
+                    preparedStatement.executeUpdate();
                 }
             }
             
         } catch (SQLException ex) {
             Logger.getLogger(PazienteDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return result;
+        return idPazienteCreato;
     }
 }

@@ -1,13 +1,13 @@
 package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.dao.DAOFactory;
-import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.Utente;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -16,10 +16,14 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 
 public class InsertPatientController implements Initializable{
@@ -27,46 +31,20 @@ public class InsertPatientController implements Initializable{
     @FXML
     private Button insertButton;
     @FXML
-    private ChoiceBox<Integer> annoNascita;
+    private ComboBox<Integer> annoNascita;
     @FXML
-    private ChoiceBox<String> provinciaRes;
+    private ComboBox<String> provinciaRes;
     @FXML
     private TextField professione;
     @FXML
-    private CheckBox fumatore;
-    @FXML
-    private CheckBox sovrappeso;
-    @FXML
-    private CheckBox sottopeso;
-    @FXML
-    private CheckBox farmaci;
-    @FXML
-    private CheckBox iperteso;
-    @FXML
-    private CheckBox sedentario;
-    @FXML
-    private CheckBox asmatico;
-    @FXML
-    private CheckBox cardiopatico;
-    @FXML
-    private CheckBox diabetico;
-    @FXML
-    private CheckBox droghe;
-    @FXML
-    private CheckBox alcool;
-    @FXML
-    private CheckBox anemico;
-    @FXML
-    private CheckBox esposto;
-    @FXML
-    private CheckBox lavoroRischio;
+    private VBox checkBoxes;
+    
     ObservableList<Integer> pazientiId = FXCollections.observableArrayList();
 
-    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ObservableList<Integer> anni = FXCollections.observableArrayList();
-        for(int now=2018; now >= 1888 ; now--){
+        for(int now = Calendar.getInstance().get(Calendar.YEAR); now >= 1888 ; now--){
             anni.addAll(now);
         }
         annoNascita.setItems(new SortedList(anni));
@@ -75,66 +53,73 @@ public class InsertPatientController implements Initializable{
         province.addAll(Paziente.sigleProvince);
         provinciaRes.setItems(new SortedList(province));
         provinciaRes.setValue(provinciaRes.getItems().get(0));
-        checkBoxes.add(alcool);
-        checkBoxes.add(asmatico);
-        checkBoxes.add(anemico);
-        checkBoxes.add(cardiopatico);
-        checkBoxes.add(diabetico);
-        checkBoxes.add(droghe);
-        checkBoxes.add(esposto);
-        checkBoxes.add(farmaci);
-        checkBoxes.add(fumatore);
-        checkBoxes.add(iperteso);
-        checkBoxes.add(lavoroRischio);
-        checkBoxes.add(sedentario);
-        checkBoxes.add(sottopeso);
-        checkBoxes.add(sovrappeso);
+
+        DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+        List<FattoreRischio> fattoriRischio = daoFactory.getPazienteDAO().getFattoriRischio();
+        int countCheck = 0;
+        HBox row = new HBox();
+        for (FattoreRischio fattoreRischio : fattoriRischio) {
+            CheckBox checkFattore = new CheckBox(fattoreRischio.getNome());
+            checkFattore.setId("CheckBox_" + fattoreRischio.getId());
+            checkFattore.setPadding(new Insets(7));
+            checkFattore.setPrefWidth(160);
+            row.getChildren().add(checkFattore);
+            countCheck++;
+            if (countCheck == 3){
+                checkBoxes.getChildren().add(row);
+                row = new HBox();
+                countCheck = 0;
+            }
+        }
+        if (countCheck > 0){
+            checkBoxes.getChildren().add(row);
+        }
     }
     
     @FXML
     private void insertPatient(ActionEvent event) {
         if(professione.getText().isEmpty()) return; //professione non specificata
-        List<FattoreRischio> fattoriRischio=getFattoriRischio();
-        Paziente p= new Paziente(annoNascita.getValue(), provinciaRes.getValue(),professione.getText(),fattoriRischio);
-        clear();
-        Utente u;
-        if((u = FXMLDocumentController.getUtente()) instanceof Medico){
-            Medico m = (Medico) u;
-            DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-            PazienteDAO pazDao = test.getPazienteDAO();
-            int id=pazDao.salvaPaziente(p, m.getIdUtente());
-            if(id== -1 ){
-                System.out.println("Errore");
-                //errore salva paziente
-            } else {
-                p.setId(id);
-                pazientiId.add(id);
+        Utente utente = FXMLDocumentController.getUtente();
+        if (utente instanceof Medico){
+            Medico m = (Medico) utente;
+            List<FattoreRischio> fattoriRischio = getFattoriRischioSelezionati();
+            Paziente nuovoPaziente = new Paziente(annoNascita.getValue(), provinciaRes.getValue(),professione.getText(),fattoriRischio);
+            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+            int idPazienteCreato = daoFactory.getPazienteDAO().salvaPaziente(nuovoPaziente, m.getIdUtente());
+            if (idPazienteCreato != -1){
+                clear();
+                nuovoPaziente.setId(idPazienteCreato);
+                pazientiId.add(idPazienteCreato);
                 Window window = insertButton.getScene().getWindow();
                 window.setUserData(pazientiId);
             }
-            
         }
     }
-
-    @FXML
-    private void sovrappesoSelected(ActionEvent event) {
-        sottopeso.setSelected(false);
-    }
-
-    @FXML
-    private void sottopesoSelected(ActionEvent event) {
-        sovrappeso.setSelected(false);
-    }
     
-    private List<FattoreRischio> getFattoriRischio(){
-        List<FattoreRischio> ris = new ArrayList<>();
-        return ris;
+    private List<FattoreRischio> getFattoriRischioSelezionati(){
+        List<FattoreRischio> fattoriRischio = new ArrayList();
+        for (Node row : checkBoxes.getChildren()){
+            if (row instanceof HBox){
+                HBox hbox = (HBox) row;
+                for (Node column : hbox.getChildren()){
+                    if (column instanceof CheckBox){
+                        CheckBox checkBox = (CheckBox) column;
+                        if (checkBox.isSelected()){
+                            String idCheckBox = checkBox.getId();
+                            FattoreRischio fattoreSelezionato = new FattoreRischio(Integer.valueOf(idCheckBox.substring(idCheckBox.indexOf('_') + 1)), null, null, -1);
+                            fattoriRischio.add(fattoreSelezionato);
+                            checkBox.setSelected(false);
+                        }
+                    }
+                }
+            }
+        }
+        return fattoriRischio;
     }
     
     private void clear(){
         annoNascita.setValue(annoNascita.getItems().get(0));
         provinciaRes.setValue(provinciaRes.getItems().get(0));
         professione.clear();
-        for(CheckBox c : checkBoxes) c.setSelected(false);
     }
 }
