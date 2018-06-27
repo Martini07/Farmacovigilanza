@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 public interface PazienteDAO {
     
     public ObservableList<Paziente> getPazienti(int idMedico);
+    public Paziente getPaziente(int idPaziente);
     public List<FattoreRischio> getFattoriRischio(int idPaziente);
     public List<FattoreRischio> getFattoriRischio();
     public int salvaPaziente(Paziente paziente, int idMedico);

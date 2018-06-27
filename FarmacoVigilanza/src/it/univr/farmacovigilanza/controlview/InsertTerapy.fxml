@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <ChoiceBox fx:id="sceltaPaziente" layoutX="260.0" layoutY="32.0" prefWidth="150.0" />
       <Label layoutX="97.0" layoutY="37.0" text="Paziente" />
@@ -19,7 +19,7 @@
       <TextField fx:id="frequenza" layoutX="265.0" layoutY="153.0" prefHeight="26.0" prefWidth="150.0" />
       <Label layoutX="97.0" layoutY="203.0" text="Data inizio" />
       <Label layoutX="97.0" layoutY="249.0" text="Data fine" />
-      <DatePicker fx:id="dataInizio" layoutX="269.0" layoutY="197.0" prefHeight="26.0" prefWidth="150.0" />
-      <DatePicker fx:id="dataFine" layoutX="271.0" layoutY="243.0" prefHeight="26.0" prefWidth="150.0" />
+      <DatePicker fx:id="dataInizio" layoutX="269.0" onAction="#dataInizio" layoutY="197.0" prefHeight="26.0" prefWidth="150.0" />
+      <DatePicker fx:id="dataFine" layoutX="271.0" disable="true" layoutY="243.0" prefHeight="26.0" prefWidth="150.0" />
    </children>
 </AnchorPane>

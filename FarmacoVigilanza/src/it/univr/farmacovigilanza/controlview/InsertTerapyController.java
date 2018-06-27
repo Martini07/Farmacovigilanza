@@ -2,27 +2,24 @@ package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
-import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Paziente;
-import it.univr.farmacovigilanza.model.Utente;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Window;
 import javafx.util.Pair;
 
 public class InsertTerapyController implements Initializable{
@@ -33,7 +30,7 @@ public class InsertTerapyController implements Initializable{
     @FXML
     private TextField frequenza;
     @FXML
-    private ChoiceBox<?> sceltaFarmaco;
+    private ChoiceBox<String> sceltaFarmaco;
     @FXML
     private TextField dose;
     @FXML
@@ -43,25 +40,64 @@ public class InsertTerapyController implements Initializable{
     @FXML
     private DatePicker dataFine;
     
-    private final Pair<Medico,Paziente> data;
+    private DAOFactory test;
+    private PazienteDAO pazDao;
     
     public InsertTerapyController(Pair<Medico,Paziente> data){
-        this.data = data;
+        medico = data.getKey();
+        paziente = data.getValue();
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        PazienteDAO pazDao = test.getPazienteDAO();
-        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(data.getKey().getIdUtente());
+        test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+        pazDao = test.getPazienteDAO();
+        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(medico.getIdUtente());
         ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
         for(Paziente p: mieiPazienti){
             idPazienti.add(p.getId());
         }
         sceltaPaziente.setItems(idPazienti);
-        if( data.getValue() != null){
-            sceltaPaziente.setValue(data.getValue().getId());
+        if( paziente != null){
+            sceltaPaziente.setValue(paziente.getId());
+            //dataInizioe
         }
+        //inserimento farmaci
+        sceltaFarmaco.getItems().add("Farmaco 1");
+        sceltaFarmaco.getItems().add("Farmaco 2");
+        
+        sceltaFarmaco.getSelectionModel().selectedIndexProperty().addListener(new FarmacoListener<>(unitaMisura));
+        sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this,pazDao));
+        setDateFactory(dataInizio,getDataNascita(),LocalDate.now());
+        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+    }
+
+    public void setPaziente(Paziente paziente){
+        this.paziente=paziente;
     }
     
+    public LocalDate getDataNascita(){
+        if(paziente != null){
+            System.out.println(paziente.getAnnoNascita());
+            return LocalDate.of(paziente.getAnnoNascita(), 1, 1);
+        }
+        return null;
+    }
+    
+    public void setDateFactory(DatePicker datePicker,LocalDate start,LocalDate end){
+        CallBack<DatePicker, DateCell> dayCellFactory = new CallBack<>(start,end);
+        datePicker.setDayCellFactory(dayCellFactory);
+    }
+    
+    public DatePicker getInizio(){ return dataInizio;}
+    public DatePicker getFine(){ return dataFine;}
+
+    
+    @FXML
+    private void dataInizio(ActionEvent event) {
+        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+        if(dataFine.isDisable()){
+            dataFine.setDisable(false);
+        }
+    }
 }

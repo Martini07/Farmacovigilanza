@@ -1,5 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
+/* To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -24,6 +23,7 @@ import javafx.collections.ObservableList;
 public class PazienteDAOImpl implements PazienteDAO {
 
     private static final String SEL_PAZIENTE_MEDICO = "SELECT * FROM PAZIENTE WHERE IDMEDICO = ?";
+    private static final String SEL_PAZIENTE = "SELECT * FROM PAZIENTE WHERE IDPAZIENTE = ?";
     private static final String SEL_FATTORI_RISCHIO_PAZIENTE = "SELECT F.* FROM RISCHIO_PAZIENTE R, FATTORE F "
             + "WHERE R.IDFATTORE = F.IDFATTORE AND IDPAZIENTE = ?";
     private static final String SEL_FATTORI_RISCHIO = "SELECT * FROM FATTORE";
@@ -51,6 +51,25 @@ public class PazienteDAOImpl implements PazienteDAO {
         return pazienti;
     }
     
+    @Override
+    public Paziente getPaziente(int idPaziente){
+        Paziente paziente = null;
+        try {
+            PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(SEL_PAZIENTE);
+            preparedStatement.setInt(1, idPaziente);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                paziente = new Paziente(rs.getInt("IDPAZIENTE"),
+                        rs.getInt("ANNO_NASCITA"),
+                        rs.getString("PROV_RESIDENZA"),
+                        rs.getString("PROFESSIONE"),
+                        getFattoriRischio(idPaziente));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return paziente;
+    }
     @Override
     public List<FattoreRischio> getFattoriRischio(int idPaziente) {
         List<FattoreRischio> fattoriRischio = new ArrayList();
