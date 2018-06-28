@@ -4,8 +4,6 @@ import it.univr.farmacovigilanza.model.Farmaco;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -18,7 +16,8 @@ import javafx.collections.ObservableList;
 public class FarmacoDAOImpl implements FarmacoDAO {
 
     private static final String SEL_FARMACI = "SELECT * FROM FARMACO";
-    							
+    private static final String SEL_FARMACO = "SELECT * FROM FARMACO WHERE IDFARMACO = ?";
+    
     @Override
     public ObservableList<Farmaco> getFarmaci() {
         ObservableList<Farmaco> farmaci = FXCollections.observableArrayList();
@@ -39,6 +38,29 @@ public class FarmacoDAOImpl implements FarmacoDAO {
             Logger.getLogger(FarmacoDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return farmaci;
+    }
+    
+    @Override
+    public Farmaco getFarmaco(int idFarmaco) {
+        Farmaco farmaco = null;
+        try {
+            PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(SEL_FARMACO);
+            preparedStatement.setInt(1, idFarmaco);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                farmaco = new Farmaco(rs.getInt("IDFARMACO"),
+                        rs.getString("NOME"),
+                        rs.getString("DESCRIZIONE"),
+                        rs.getString("DITTA_PRODUTTRICE"),
+                        rs.getString("COD_MINISTERIALE"),
+                        rs.getString("PRINCIPIO_ATTIVO"),
+                        rs.getInt("QUANTITA"),
+                        rs.getString("UNITA_MISURA"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FarmacoDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return farmaco;
     }
         
 }
