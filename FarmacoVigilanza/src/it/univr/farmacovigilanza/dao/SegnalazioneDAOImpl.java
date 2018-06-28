@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -18,12 +20,12 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
     private static final String SEL_REAZIONI_AVVERSE = "SELECT * FROM REAZIONE";
     
     @Override
-    public List<ReazioneAvversa> getReazioniAvverse() {
-        List<ReazioneAvversa> reazioni = new ArrayList();
+    public ObservableList<ReazioneAvversa> getReazioniAvverse() {
+        ObservableList<ReazioneAvversa> reazioni =FXCollections.observableArrayList();
         try {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_REAZIONI_AVVERSE);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 reazioni.add(new ReazioneAvversa(rs.getInt("IDREAZIONE"),
                         rs.getString("NOME"),
                         rs.getString("DESCRIZIONE"),

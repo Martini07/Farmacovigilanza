@@ -13,11 +13,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ChoiceBox;
 
 
-public class  PazienteListener<Integer> implements ChangeListener{
+public class  PazienteTerapiaListener<Integer> implements ChangeListener{
     private InsertTerapyController controller;
     private PazienteDAO pazDao;
 
-    PazienteListener(InsertTerapyController controller,PazienteDAO pazDao) {
+    PazienteTerapiaListener(InsertTerapyController controller,PazienteDAO pazDao) {
         this.controller=controller;
         this.pazDao=pazDao;
     }
@@ -32,6 +32,7 @@ public class  PazienteListener<Integer> implements ChangeListener{
         controller.getInizio().setValue(null);
         controller.getFine().setValue(null);
         controller.getFine().setDisable(true);
+        controller.clean();
     }
     
 }

@@ -2,12 +2,14 @@ package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
+import it.univr.farmacovigilanza.dao.SegnalazioneDAO;
 import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Farmacologo;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
+import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label reazioneAvversaLabel;
     @FXML
-    private ChoiceBox<?> sceltaReazioneAvversa;
+    private ChoiceBox<String> sceltaReazioneAvversa;
     @FXML
     private Label dataReazioneAvversaLabel;
     @FXML
@@ -83,9 +85,14 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn<Paziente, String> professione;
     @FXML
     private TableColumn<Paziente, List<FattoreRischio>> fattoriRischio;
-    
+    private DAOFactory test =null;
+    private PazienteDAO pazDao = null;
+    private SegnalazioneDAO segDAO = null;
+    private ObservableList<String> nomiReazioniAvverse = null;
+    private ObservableList<ReazioneAvversa> reazioniAvverse = null;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         anno.setCellValueFactory(new PropertyValueFactory<>("annoNascita"));
         provincia.setCellValueFactory(new PropertyValueFactory<>("provinciaRes"));
@@ -160,15 +167,26 @@ public class FXMLDocumentController implements Initializable {
     private void enableMedicoInterface(){
         pazientiButton.setDisable(false);
         pazientiButton.setVisible(true);
-        //Obtain pazienti
-        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        PazienteDAO pazDao = test.getPazienteDAO();
+        if(pazDao ==null) pazDao = test.getPazienteDAO();
+        //Ottieni i miei pazienti
         ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(((Medico) logged).getIdUtente());
         ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
         for(Paziente p: mieiPazienti){
             idPazienti.add(p.getId());
         }
         sceltaPaziente.setItems(idPazienti);
+        //sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteTerapiaListener<>(this,pazDao));
+        
+        if(segDAO ==null){
+            //segnalazioni cercate una volta sola
+            segDAO = test.getSegnalazioneDAO();
+            reazioniAvverse = segDAO.getReazioniAvverse();
+            nomiReazioniAvverse = FXCollections.observableArrayList();
+            for(ReazioneAvversa r : reazioniAvverse){
+                nomiReazioniAvverse.add(r.getNome());
+            }
+            sceltaReazioneAvversa.setItems(nomiReazioniAvverse);
+        }
         enableSegnalazione();
     }
 

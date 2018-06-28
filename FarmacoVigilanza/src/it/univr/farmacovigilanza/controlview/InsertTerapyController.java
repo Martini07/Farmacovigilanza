@@ -81,7 +81,7 @@ public class InsertTerapyController implements Initializable{
         }
         sceltaFarmaco.setItems(nomeFarmaci);
         sceltaFarmaco.getSelectionModel().selectedIndexProperty().addListener(new FarmacoListener<>(this));
-        sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this,pazDao));
+        sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteTerapiaListener<>(this,pazDao));
         
     }
 
@@ -151,11 +151,20 @@ public class InsertTerapyController implements Initializable{
         return sceltaPaziente.getItems().get(index);
     }
     
-    private void clean(){
+    public void cambioFarmaco(){
+        dataInizio.setValue(null);
+        dataFine.setValue(null);
+        dataFine.setDisable(true);
+        dose.clear();
+        frequenza.clear();
+    }
+    public void clean(){
         sceltaFarmaco.setValue(null);
         dataInizio.setValue(null);
         dataFine.setValue(null);
+        dataFine.setDisable(true);
         dose.clear();
         frequenza.clear();
+        unitaMisura.setText(null);
     }
 }

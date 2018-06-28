@@ -2,6 +2,7 @@ package it.univr.farmacovigilanza.dao;
 
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import java.util.List;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -9,6 +10,6 @@ import java.util.List;
  */
 public interface SegnalazioneDAO {
     
-    public List<ReazioneAvversa> getReazioniAvverse();
+    public ObservableList<ReazioneAvversa> getReazioniAvverse();
     
 }

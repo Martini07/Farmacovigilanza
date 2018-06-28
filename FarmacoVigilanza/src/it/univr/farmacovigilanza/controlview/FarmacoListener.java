@@ -29,6 +29,7 @@ public class  FarmacoListener<String> implements ChangeListener{
         Farmaco farmaco=farmaci.get(index);
         controller.setFarmaco(farmaco);
         udm.setText(farmaco.getUnitaMisura());
+        controller.cambioFarmaco();
     }
     
 }

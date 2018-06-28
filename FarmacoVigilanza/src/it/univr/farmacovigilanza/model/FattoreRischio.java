@@ -32,7 +32,7 @@ public class FattoreRischio {
     
     @Override
     public String toString(){
-        return nome+" "+livelloRischio+"\n"+descrizione+"\n";
+        return nome;
     }
     
     @Override
