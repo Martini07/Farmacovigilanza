@@ -10,11 +10,16 @@ import it.univr.farmacovigilanza.model.Farmacologo;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
@@ -102,11 +108,11 @@ public class FXMLDocumentController implements Initializable {
     }    
 
     @FXML
-    private void doLogin(ActionEvent event) {
+    private void doLogin(ActionEvent event) throws UnsupportedEncodingException {
         //try login
         DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         UserDAO userDao = test.getUserDAO();
-        Utente utente = userDao.getUtente(username.getText(), password.getText());
+        Utente utente = userDao.getUtente(username.getText(), toHash(password.getText()));
         if (utente != null) {
             if (utente instanceof Medico){
                 logged=(Medico) utente;
@@ -114,19 +120,21 @@ public class FXMLDocumentController implements Initializable {
             } else { //Farmacologo
                 logged=(Farmacologo) utente;
             }
+            //logged in
+            login.setText("Logged as " + utente.getNome() + " " + utente.getCognome());
+            disableLoginFields();
+            //enable logout
+            logoutButton.setVisible(true);
+            logoutButton.setDisable(false);
         } else {
-            //login errata
-            login.setText("Failed to login");
-            //check if username exist...
             username.clear();
             password.clear();
-        }     
-        //logged in
-        login.setText("Logged as " + utente.getNome() + " " + utente.getCognome());
-        disableLoginFields();
-        //enable logout
-        logoutButton.setVisible(true);
-        logoutButton.setDisable(false);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Messaggio di errore");
+            alert.setHeaderText("Errore nella login");
+            alert.setContentText("Username o password non corretti");
+            alert.showAndWait();
+        }
     }
     
     @FXML
@@ -357,7 +365,21 @@ public class FXMLDocumentController implements Initializable {
         CallBack<DatePicker, DateCell> dayCellFactory = new CallBack<>(start,end);
         datePicker.setDayCellFactory(dayCellFactory);
     }
+    
     public int comboBoxGet(int index){
         return sceltaPaziente.getItems().get(index);
+    }
+
+    private String toHash(String text) {
+        String hash = null;
+        try {
+            byte[] textData = text.getBytes("UTF-8");
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] digest = messageDigest.digest(textData);
+            hash = new BigInteger(digest).toString(16);
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return hash;
     }
 }
