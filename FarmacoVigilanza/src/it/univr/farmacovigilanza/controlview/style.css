@@ -1,0 +1,93 @@
+
+/* https://coolors.co/577590-f3ca40-f2a541-f08a4b-d78a76 */
+
+.root{
+    -fx-background-color: #577590;
+    -fx-font-family: "Helvetica";
+}
+
+.button {
+    -fx-background-color: #F08A4B;
+    -fx-background-radius: 5,4,3,5;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10 5 10;
+}
+
+.button:hover {
+    -fx-background-color: #F2A541;
+}
+
+.text-field {
+    -fx-font-color: #F3CA40; 
+    -fx-text-fill: #F3CA40;
+    -fx-prompt-text-fill: #F3CA40;
+    -fx-background-color: -fx-text-box-border, #577590 ;
+    -fx-background-insets: 0, 0 0 1 0 ;
+    -fx-background-radius: 0 ;
+    -fx-font-size: 15px;
+    -fx-padding: 3 3 3 3;
+}
+
+#aggiuntaPaziente {
+    -fx-background-radius: 12 12 12 12;
+    -fx-padding: 1 7 1 7;
+}
+
+.label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #F3CA40;
+    -fx-font-size: 14px;
+}
+
+/* COMBO BOX */
+
+.combo-box-base {
+    -fx-font-size: 14px;
+    -fx-border-radius: 12;
+    -fx-border-color: #F08A4B;
+    -fx-font-weight: normal;
+    -fx-background-color: transparent;
+}
+
+.combo-box .cell{
+    -fx-text-fill: #F3CA40;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #F08A4B;
+}
+
+/* DATE PICKER */
+
+.date-picker {
+    -fx-border-color: #F08A4B;
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow-button{
+    -fx-background-color: transparent;
+}
+
+.date-picker .arrow{
+    -fx-background-color: #F08A4B;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+}
+
+/* CHECK BOX */
+
+.check-box {
+    -fx-text-fill: #F3CA40;
+}
+
+.check-box .box {
+    -fx-background-color: #D78A76;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #F3CA40;
+}
+

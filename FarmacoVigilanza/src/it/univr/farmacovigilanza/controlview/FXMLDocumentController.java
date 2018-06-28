@@ -21,11 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -34,7 +33,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -54,13 +53,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button pazientiButton;
     @FXML
-    private ChoiceBox<Integer> sceltaPaziente;
+    private ComboBox<Integer> sceltaPaziente;
     @FXML
     private Label pazienteLabel;
     @FXML
     private Label reazioneAvversaLabel;
     @FXML
-    private ChoiceBox<String> sceltaReazioneAvversa;
+    private ComboBox<String> sceltaReazioneAvversa;
     @FXML
     private Label dataReazioneAvversaLabel;
     @FXML
@@ -311,8 +310,11 @@ public class FXMLDocumentController implements Initializable {
             try{
                 Parent root = FXMLLoader.load(getClass().getResource("InsertPatient.fxml"));
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
                 stage.setTitle("Inserimento paziente");
-                stage.setScene(new Scene(root));
+                Scene newScene = new Scene(root);
+                newScene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
+                stage.setScene(newScene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
                 //update choicebox with new pazienti
@@ -329,11 +331,11 @@ public class FXMLDocumentController implements Initializable {
     }
 
     
-    public ChoiceBox<Integer> getSceltaPaziente(){
+    public ComboBox<Integer> getSceltaPaziente(){
         return sceltaPaziente;
     }
     
-    public ChoiceBox<String> getSceltaReazioneAvversa(){
+    public ComboBox<String> getSceltaReazioneAvversa(){
         return sceltaReazioneAvversa;
     }
     

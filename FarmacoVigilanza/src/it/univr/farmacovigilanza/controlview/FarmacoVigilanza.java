@@ -15,6 +15,7 @@ public class FarmacoVigilanza extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
         stage.setTitle("FARMACOVIGILANZA");
         stage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
         stage.setScene(scene);

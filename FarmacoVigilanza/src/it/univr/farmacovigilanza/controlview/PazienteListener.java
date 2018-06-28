@@ -6,21 +6,21 @@ import it.univr.farmacovigilanza.model.Paziente;
 import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 
 
 public class PazienteListener<Integer> implements ChangeListener{
     
     private final FXMLDocumentController controller;
-    private final ChoiceBox<Integer> sceltaPaziente;
-    private final ChoiceBox<String> sceltaReazioneAvversa;
+    private final ComboBox<Integer> sceltaPaziente;
+    private final ComboBox<String> sceltaReazioneAvversa;
     private final DatePicker dataReazioneAvversa;
     private final PazienteDAO pazDAO;
 
     public PazienteListener(FXMLDocumentController controller) {
         this.controller=controller;
-        sceltaPaziente=(ChoiceBox<Integer>) controller.getSceltaPaziente();
+        sceltaPaziente=(ComboBox<Integer>) controller.getSceltaPaziente();
         sceltaReazioneAvversa=controller.getSceltaReazioneAvversa();
         dataReazioneAvversa=controller.getDataReazioneAvversa();
         pazDAO=controller.getPazienteDAO();
