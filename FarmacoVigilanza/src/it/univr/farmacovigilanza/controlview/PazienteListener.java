@@ -10,9 +10,10 @@ import it.univr.farmacovigilanza.model.Paziente;
 import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.ChoiceBox;
 
 
-public class  PazienteListener<String> implements ChangeListener{
+public class  PazienteListener<Integer> implements ChangeListener{
     private InsertTerapyController controller;
     private PazienteDAO pazDao;
 
@@ -23,10 +24,11 @@ public class  PazienteListener<String> implements ChangeListener{
     
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        Paziente paziente = pazDao.getPaziente((int) newValue);
+        int idPaziente = controller.comboBoxGet((int) newValue);
+        Paziente paziente = pazDao.getPaziente(idPaziente);
         controller.setPaziente(paziente);
         controller.setDateFactory(controller.getInizio(), controller.getDataNascita(), LocalDate.now());
-        controller.setDateFactory(controller.getFine(), controller.getDataNascita(), LocalDate.now());
+        controller.setDateFactory(controller.getFine(),  controller.getDataNascita(), LocalDate.now());
         controller.getInizio().setValue(null);
         controller.getFine().setValue(null);
         controller.getFine().setDisable(true);

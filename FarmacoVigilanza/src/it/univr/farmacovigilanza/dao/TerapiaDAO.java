@@ -10,5 +10,5 @@ import java.util.List;
 public interface TerapiaDAO {
     
     public List<Terapia> getTerapie(int idMedico);
-    public boolean salvaTerapia(Terapia terapia);
+    public int salvaTerapia(Terapia terapia);
 }

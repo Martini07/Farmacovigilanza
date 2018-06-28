@@ -2,8 +2,12 @@ package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
+import it.univr.farmacovigilanza.dao.FarmacoDAO;
+import it.univr.farmacovigilanza.dao.TerapiaDAO;
+import it.univr.farmacovigilanza.model.Farmaco;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Paziente;
+import it.univr.farmacovigilanza.model.Terapia;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -26,11 +31,11 @@ public class InsertTerapyController implements Initializable{
     private Paziente paziente=null;
     private Medico medico=null;
     @FXML
-    private ChoiceBox<Integer> sceltaPaziente;
+    private ComboBox<Integer> sceltaPaziente;
     @FXML
     private TextField frequenza;
     @FXML
-    private ChoiceBox<String> sceltaFarmaco;
+    private ComboBox<String> sceltaFarmaco;
     @FXML
     private TextField dose;
     @FXML
@@ -42,6 +47,9 @@ public class InsertTerapyController implements Initializable{
     
     private DAOFactory test;
     private PazienteDAO pazDao;
+    private TerapiaDAO terDAO;
+    private ObservableList<Farmaco> farmaci;
+    private Farmaco farmaco=null;
     
     public InsertTerapyController(Pair<Medico,Paziente> data){
         medico = data.getKey();
@@ -52,6 +60,7 @@ public class InsertTerapyController implements Initializable{
     public void initialize(URL url, ResourceBundle rb) {
         test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         pazDao = test.getPazienteDAO();
+        terDAO = test.getTerapiaDAO();
         ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(medico.getIdUtente());
         ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
         for(Paziente p: mieiPazienti){
@@ -60,16 +69,20 @@ public class InsertTerapyController implements Initializable{
         sceltaPaziente.setItems(idPazienti);
         if( paziente != null){
             sceltaPaziente.setValue(paziente.getId());
-            //dataInizioe
+            setDateFactory(dataInizio,getDataNascita(),LocalDate.now());
+            setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
         }
         //inserimento farmaci
-        sceltaFarmaco.getItems().add("Farmaco 1");
-        sceltaFarmaco.getItems().add("Farmaco 2");
-        
-        sceltaFarmaco.getSelectionModel().selectedIndexProperty().addListener(new FarmacoListener<>(unitaMisura));
+        FarmacoDAO farmDao = test.getFarmacoDAO();
+        farmaci = farmDao.getFarmaci();
+        ObservableList<String> nomeFarmaci=FXCollections.observableArrayList();
+        for(Farmaco f: farmaci){
+            nomeFarmaci.add(f.getNome()+" ("+f.getQuantita()+" "+f.getUnitaMisura()+") - "+f.getDittaProduttrice());
+        }
+        sceltaFarmaco.setItems(nomeFarmaci);
+        sceltaFarmaco.getSelectionModel().selectedIndexProperty().addListener(new FarmacoListener<>(this));
         sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this,pazDao));
-        setDateFactory(dataInizio,getDataNascita(),LocalDate.now());
-        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+        
     }
 
     public void setPaziente(Paziente paziente){
@@ -78,7 +91,6 @@ public class InsertTerapyController implements Initializable{
     
     public LocalDate getDataNascita(){
         if(paziente != null){
-            System.out.println(paziente.getAnnoNascita());
             return LocalDate.of(paziente.getAnnoNascita(), 1, 1);
         }
         return null;
@@ -89,6 +101,9 @@ public class InsertTerapyController implements Initializable{
         datePicker.setDayCellFactory(dayCellFactory);
     }
     
+    public void setFarmaco(Farmaco farmaco){
+        this.farmaco=farmaco;
+    }
     public DatePicker getInizio(){ return dataInizio;}
     public DatePicker getFine(){ return dataFine;}
 
@@ -99,5 +114,48 @@ public class InsertTerapyController implements Initializable{
         if(dataFine.isDisable()){
             dataFine.setDisable(false);
         }
+    }
+    
+    @FXML
+    private void inserisciTerapia(ActionEvent event) {
+        if(!compiled()) return;
+        Terapia terapia = new Terapia(farmaco,dataInizio.getValue(), dataFine.getValue(),Integer.parseInt(dose.getText()),Integer.parseInt(frequenza.getText()),paziente);
+        int idTerapia = terDAO.salvaTerapia(terapia);
+        terapia.setId(idTerapia);
+        clean();
+    }
+    
+    public Label getUdm(){
+        return unitaMisura;
+    }
+    
+    public ObservableList<Farmaco> getFarmaci(){
+        return farmaci;
+    }
+    
+    private boolean compiled(){
+        boolean ris=true;
+        ris = (dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() && isValidFrequenza());
+        return ris;
+    }
+    
+    private boolean isValidDose(){
+        return dose.getText()!= null;
+    }
+    
+    private boolean isValidFrequenza(){
+        return frequenza.getText()!= null;
+    }
+    
+    public int comboBoxGet(int index){
+        return sceltaPaziente.getItems().get(index);
+    }
+    
+    private void clean(){
+        sceltaFarmaco.setValue(null);
+        dataInizio.setValue(null);
+        dataFine.setValue(null);
+        dose.clear();
+        frequenza.clear();
     }
 }

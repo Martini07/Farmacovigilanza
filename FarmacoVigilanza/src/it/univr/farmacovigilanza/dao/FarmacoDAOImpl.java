@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -18,8 +20,8 @@ public class FarmacoDAOImpl implements FarmacoDAO {
     private static final String SEL_FARMACI = "SELECT * FROM FARMACO";
     							
     @Override
-    public List<Farmaco> getFarmaci() {
-        List<Farmaco> farmaci = new ArrayList();
+    public ObservableList<Farmaco> getFarmaci() {
+        ObservableList<Farmaco> farmaci = FXCollections.observableArrayList();
         try {
             PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(SEL_FARMACI);
             ResultSet rs = preparedStatement.executeQuery();

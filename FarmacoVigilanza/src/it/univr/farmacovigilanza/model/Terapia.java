@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Terapia {
     
-    private final int id;
+    private int id;
     private final Farmaco farmaco;
     private final LocalDate dataInizio;
     private final LocalDate dataFine;
@@ -22,10 +22,23 @@ public class Terapia {
         this.paziente = paziente;
     }
 
+    public Terapia(Farmaco farmaco, LocalDate dataInizio, LocalDate dataFine, int dose, int frequenzaGiornaliera, Paziente paziente) {
+        this.id=-1;
+        this.farmaco = farmaco;
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.dose = dose;
+        this.frequenzaGiornaliera = frequenzaGiornaliera;
+        this.paziente = paziente;
+    }
+    
     public int getId() {
         return id;
     }
 
+    public void setId(int id){
+        this.id=id;
+    }
     public Farmaco getFarmaco() {
         return farmaco;
     }

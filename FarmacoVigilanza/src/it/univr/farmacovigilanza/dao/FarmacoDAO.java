@@ -2,6 +2,7 @@ package it.univr.farmacovigilanza.dao;
 
 import it.univr.farmacovigilanza.model.Farmaco;
 import java.util.List;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -9,5 +10,5 @@ import java.util.List;
  */
 public interface FarmacoDAO {
     
-    public List<Farmaco> getFarmaci();
+    public ObservableList<Farmaco> getFarmaci();
 }
