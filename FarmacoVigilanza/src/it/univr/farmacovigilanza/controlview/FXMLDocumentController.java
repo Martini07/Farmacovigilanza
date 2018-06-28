@@ -11,6 +11,7 @@ import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,6 +26,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -175,7 +177,7 @@ public class FXMLDocumentController implements Initializable {
             idPazienti.add(p.getId());
         }
         sceltaPaziente.setItems(idPazienti);
-        //sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteTerapiaListener<>(this,pazDao));
+        sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this));
         
         if(segDAO ==null){
             //segnalazioni cercate una volta sola
@@ -221,7 +223,7 @@ public class FXMLDocumentController implements Initializable {
         sceltaReazioneAvversa.setVisible(true);
         sceltaReazioneAvversa.setDisable(false);
         dataReazioneAvversa.setVisible(true);
-        dataReazioneAvversa.setDisable(false);
+        dataReazioneAvversa.setDisable(true);
         aggiuntaPaziente.setVisible(true);
         aggiuntaPaziente.setDisable(false);
     }
@@ -326,4 +328,34 @@ public class FXMLDocumentController implements Initializable {
         return logged;
     }
 
+    
+    public ChoiceBox<Integer> getSceltaPaziente(){
+        return sceltaPaziente;
+    }
+    
+    public ChoiceBox<String> getSceltaReazioneAvversa(){
+        return sceltaReazioneAvversa;
+    }
+    
+    public DatePicker getDataReazioneAvversa(){
+        return dataReazioneAvversa;
+    }
+    
+    public PazienteDAO getPazienteDAO(){
+        return pazDao;
+    }
+    public LocalDate getDataNascita(Paziente paziente){
+        if(paziente != null){
+            return LocalDate.of(paziente.getAnnoNascita(), 1, 1);
+        }
+        return null;
+    }
+    
+    public void setDateFactory(DatePicker datePicker,LocalDate start,LocalDate end){
+        CallBack<DatePicker, DateCell> dayCellFactory = new CallBack<>(start,end);
+        datePicker.setDayCellFactory(dayCellFactory);
+    }
+    public int comboBoxGet(int index){
+        return sceltaPaziente.getItems().get(index);
+    }
 }
