@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -78,20 +80,22 @@ public class InsertPatientController implements Initializable{
     
     @FXML
     private void insertPatient(ActionEvent event) {
-        if(professione.getText().isEmpty()) return; //professione non specificata
+        //TODO mi aspetto la veda solo il Medico questa funz... serve il controllo instanceof Medico ?
         Utente utente = FXMLDocumentController.getUtente();
         if (utente instanceof Medico){
             Medico m = (Medico) utente;
             List<FattoreRischio> fattoriRischio = getFattoriRischioSelezionati();
-            Paziente nuovoPaziente = new Paziente(annoNascita.getValue(), provinciaRes.getValue(),professione.getText(),fattoriRischio);
-            DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-            int idPazienteCreato = daoFactory.getPazienteDAO().salvaPaziente(nuovoPaziente, m.getIdUtente());
-            if (idPazienteCreato != -1){
-                clear();
-                nuovoPaziente.setId(idPazienteCreato);
-                pazientiId.add(idPazienteCreato);
-                Window window = insertButton.getScene().getWindow();
-                window.setUserData(pazientiId);
+            if (checkCampiValidi(fattoriRischio)) {
+                Paziente nuovoPaziente = new Paziente(annoNascita.getValue(), provinciaRes.getValue(),professione.getText(),fattoriRischio);
+                DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+                int idPazienteCreato = daoFactory.getPazienteDAO().salvaPaziente(nuovoPaziente, m.getIdUtente());
+                if (idPazienteCreato != -1){
+                    clear();
+                    nuovoPaziente.setId(idPazienteCreato);
+                    pazientiId.add(idPazienteCreato);
+                    Window window = insertButton.getScene().getWindow();
+                    window.setUserData(pazientiId);
+                }
             }
         }
     }
@@ -106,7 +110,7 @@ public class InsertPatientController implements Initializable{
                         CheckBox checkBox = (CheckBox) column;
                         if (checkBox.isSelected()){
                             String idCheckBox = checkBox.getId();
-                            FattoreRischio fattoreSelezionato = new FattoreRischio(Integer.valueOf(idCheckBox.substring(idCheckBox.indexOf('_') + 1)), null, null, -1);
+                            FattoreRischio fattoreSelezionato = new FattoreRischio(Integer.valueOf(idCheckBox.substring(idCheckBox.indexOf('_') + 1)), checkBox.getText(), null, -1);
                             fattoriRischio.add(fattoreSelezionato);
                             checkBox.setSelected(false);
                         }
@@ -121,5 +125,33 @@ public class InsertPatientController implements Initializable{
         annoNascita.setValue(annoNascita.getItems().get(0));
         provinciaRes.setValue(provinciaRes.getItems().get(0));
         professione.clear();
+    }
+    
+    private boolean checkCampiValidi(List<FattoreRischio> fattoriRischioSelezionati){
+        String msgErrore = null;
+        if(professione.getText().isEmpty()){
+            msgErrore = "Professione non inserita";
+        } else {
+            boolean sovrappeso = false;
+            boolean sottopeso = false;
+            for (FattoreRischio fattoreRischio : fattoriRischioSelezionati) {
+                if (fattoreRischio.getNome().toLowerCase().equals("sovrappeso"))
+                    sovrappeso = true;
+                else if (fattoreRischio.getNome().toLowerCase().equals("sottopeso"))
+                    sottopeso = true;
+            }
+            if (sovrappeso && sottopeso)
+                 msgErrore = "Fattori di rischio 'Sovrappeso' e 'Sottopeso' non selezionabili contemporaneamente";
+        }
+        
+        if (msgErrore != null){
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Messaggio di errore");
+            alert.setHeaderText("Errore nella compilazione dei dati");
+            alert.setContentText(msgErrore);
+            alert.showAndWait();
+            return false;
+        }
+        return true;
     }
 }
