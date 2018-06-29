@@ -50,6 +50,7 @@ public class InsertTerapyController implements Initializable{
     private TerapiaDAO terDAO;
     private ObservableList<Farmaco> farmaci;
     private Farmaco farmaco=null;
+    private int doseValue,frequenzaValue=-1;
     
     public InsertTerapyController(Pair<Medico,Paziente> data){
         medico = data.getKey();
@@ -119,7 +120,7 @@ public class InsertTerapyController implements Initializable{
     @FXML
     private void inserisciTerapia(ActionEvent event) {
         if(!compiled()) return;
-        Terapia terapia = new Terapia(farmaco,dataInizio.getValue(), dataFine.getValue(),Integer.parseInt(dose.getText()),Integer.parseInt(frequenza.getText()),paziente);
+        Terapia terapia = new Terapia(farmaco,dataInizio.getValue(), dataFine.getValue(),doseValue,frequenzaValue,paziente);
         int idTerapia = terDAO.salvaTerapia(terapia);
         terapia.setId(idTerapia);
         clean();
@@ -135,16 +136,36 @@ public class InsertTerapyController implements Initializable{
     
     private boolean compiled(){
         boolean ris=true;
-        ris = (dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() && isValidFrequenza());
+        ris = (dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() & isValidFrequenza());
         return ris;
     }
     
     private boolean isValidDose(){
-        return dose.getText()!= null;
+        String doseString = dose.getText();
+        if(doseString == null ){
+            dose.clear();
+            return false;
+        }
+        if(doseString.matches("\\d*")){
+            doseValue=Integer.parseInt(doseString);
+            return true;
+        }
+        dose.clear();
+        return false;
     }
     
     private boolean isValidFrequenza(){
-        return frequenza.getText()!= null;
+        String frequenzaString = frequenza.getText();
+        if(frequenzaString == null ){
+            frequenza.clear();
+            return false;
+        }
+        if(frequenzaString.matches("\\d*")){
+            frequenzaValue=Integer.parseInt(frequenzaString);
+            return true;
+        }
+        frequenza.clear();
+        return false;
     }
     
     public int comboBoxGet(int index){

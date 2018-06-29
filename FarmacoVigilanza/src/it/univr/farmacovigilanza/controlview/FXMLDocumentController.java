@@ -3,6 +3,7 @@ package it.univr.farmacovigilanza.controlview;
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.dao.SegnalazioneDAO;
+import it.univr.farmacovigilanza.dao.TerapiaDAO;
 import it.univr.farmacovigilanza.dao.UserDAO;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
@@ -10,12 +11,14 @@ import it.univr.farmacovigilanza.model.Farmacologo;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
+import it.univr.farmacovigilanza.model.Terapia;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -26,20 +29,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -69,8 +77,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Label dataReazioneAvversaLabel;
     @FXML
-    private Label terapieLabel;
-    @FXML
     private DatePicker dataReazioneAvversa;
     @FXML
     private Button segnalaPazienteButton;
@@ -95,8 +101,11 @@ public class FXMLDocumentController implements Initializable {
     private DAOFactory test =null;
     private PazienteDAO pazDao = null;
     private SegnalazioneDAO segDAO = null;
+    private TerapiaDAO terDAO = null;
     private ObservableList<String> nomiReazioniAvverse = null;
     private ObservableList<ReazioneAvversa> reazioniAvverse = null;
+    @FXML
+    private Button segnala;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
@@ -196,7 +205,7 @@ public class FXMLDocumentController implements Initializable {
             }
             sceltaReazioneAvversa.setItems(nomiReazioniAvverse);
         }
-        enableSegnalazione();
+        enableSegnalazione(false);
     }
 
     private void disableMedicoInterface(){
@@ -210,9 +219,10 @@ public class FXMLDocumentController implements Initializable {
         terapiaPaziente.setVisible(false);
         disableSegnalazione();
         grid.getItems().removeAll(grid.getItems());
+        sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
     }
     
-    private void enableSegnalazione(){
+    private void enableSegnalazione(boolean flag){
         pazienteLabel.setVisible(true);
         pazienteLabel.setDisable(false);
         segnalaPazienteButton.setDisable(true);
@@ -223,16 +233,20 @@ public class FXMLDocumentController implements Initializable {
         reazioneAvversaLabel.setDisable(false);
         dataReazioneAvversaLabel.setVisible(true);
         dataReazioneAvversaLabel.setDisable(false);
-        terapieLabel.setVisible(true);
-        terapieLabel.setDisable(false);
         sceltaPaziente.setVisible(true);
         sceltaPaziente.setDisable(false);
         sceltaReazioneAvversa.setVisible(true);
         sceltaReazioneAvversa.setDisable(false);
         dataReazioneAvversa.setVisible(true);
-        dataReazioneAvversa.setDisable(true);
+        if(flag){
+            dataReazioneAvversa.setDisable(false);
+        }else{
+            dataReazioneAvversa.setDisable(true);
+        }
         aggiuntaPaziente.setVisible(true);
         aggiuntaPaziente.setDisable(false);
+        segnala.setVisible(true);
+        segnala.setDisable(false);
     }
     
     private void disableSegnalazione(){
@@ -242,11 +256,8 @@ public class FXMLDocumentController implements Initializable {
         reazioneAvversaLabel.setDisable(true);
         dataReazioneAvversaLabel.setVisible(false);
         dataReazioneAvversaLabel.setDisable(true);
-        terapieLabel.setVisible(false);
-        terapieLabel.setDisable(true);
         sceltaPaziente.setVisible(false);
         sceltaPaziente.setDisable(true);
-        //sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
         sceltaReazioneAvversa.setVisible(false);
         sceltaReazioneAvversa.setDisable(true);
         //sceltaReazioneAvversa.getItems().removeAll(sceltaReazioneAvversa.getItems());
@@ -254,6 +265,9 @@ public class FXMLDocumentController implements Initializable {
         dataReazioneAvversa.setDisable(true);
         aggiuntaPaziente.setVisible(false);
         aggiuntaPaziente.setDisable(true);
+        segnala.setVisible(false);
+        segnala.setDisable(true);
+        clear();
     }
     
     @FXML
@@ -281,7 +295,7 @@ public class FXMLDocumentController implements Initializable {
         grid.setDisable(true);
         //set this patient
         sceltaPaziente.setValue(id);
-        enableSegnalazione();
+        enableSegnalazione(true);
     }
 
     @FXML
@@ -381,5 +395,24 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return hash;
+    }
+
+    @FXML
+    private void segnala(ActionEvent event){
+        if(sceltaPaziente.getValue() == null) return; //inserire paziente
+        if(sceltaReazioneAvversa.getValue() == null) return; //inserire reazione avversa
+        LocalDate data = dataReazioneAvversa.getValue();
+        if(data == null) return; //inserire data
+        if(terDAO == null ) terDAO = test.getTerapiaDAO();
+        List<Terapia> terapieAttive = terDAO.getTerapie(sceltaPaziente.getValue(), data, data);
+        //for(Terapia t: terapieAttive) System.out.println(t);
+        //add new segnalazione
+        clear();
+    }
+    
+    private void clear(){
+        sceltaPaziente.setValue(null);
+        sceltaReazioneAvversa.setValue(null);
+        dataReazioneAvversa.setValue(null);
     }
 }

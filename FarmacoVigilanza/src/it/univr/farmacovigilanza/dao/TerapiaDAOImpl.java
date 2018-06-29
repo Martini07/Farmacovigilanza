@@ -33,6 +33,7 @@ public class TerapiaDAOImpl implements TerapiaDAO {
             DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
             FarmacoDAO farmacoDAO = daoFactory.getFarmacoDAO();
             while (rs.next()) {
+                System.out.println("Trovata una terapia");
                 terapie.add(new Terapia(rs.getInt("IDTERAPIA"),
                         farmacoDAO.getFarmaco(rs.getInt("IDFARMACO")),
                         rs.getDate("DATA_INIZIO").toLocalDate(),

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -11,7 +14,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
     <children>
         <Label fx:id="login" layoutX="221.0" layoutY="18.0" minHeight="16" minWidth="69" />
       <TextField fx:id="username" layoutX="175.0" layoutY="112.0" promptText="username" />
@@ -26,7 +29,6 @@
       <ComboBox fx:id="sceltaReazioneAvversa" disable="true" layoutX="254.0" layoutY="109.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
       <DatePicker fx:id="dataReazioneAvversa" disable="true" editable="false" layoutX="254.0" layoutY="157.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
       <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="78.0" layoutY="162.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
-      <Label fx:id="terapieLabel" disable="true" layoutX="79.0" layoutY="207.0" minHeight="16" minWidth="69" text="Terapie" visible="false" />
       <Button fx:id="segnalaPazienteButton" disable="true" layoutX="35.0" layoutY="16.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
       <Button fx:id="terapiaPaziente" disable="true" layoutX="139.0" layoutY="17.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
       <Button fx:id="aggiuntaPaziente" disable="true" layoutX="404.0" layoutY="62.0" mnemonicParsing="false" onAction="#addPaziente" text="+" visible="false" />
@@ -39,5 +41,6 @@
             <TableColumn fx:id="fattoriRischio" prefWidth="155.0" text="Fattori rischio" />
         </columns>
       </TableView>
+      <Button fx:id="segnala" disable="true" layoutX="228.0" layoutY="302.0" mnemonicParsing="false" onAction="#segnala" text="Segnala" visible="false" />
     </children>
 </AnchorPane>

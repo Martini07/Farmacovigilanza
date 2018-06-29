@@ -25,11 +25,13 @@ public class  FarmacoListener<String> implements ChangeListener{
     
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        int index = (int) newValue;
-        Farmaco farmaco=farmaci.get(index);
-        controller.setFarmaco(farmaco);
-        udm.setText(farmaco.getUnitaMisura());
-        controller.cambioFarmaco();
+        if(newValue != null){
+            int index = (int) newValue;
+            Farmaco farmaco=farmaci.get(index);
+            controller.setFarmaco(farmaco);
+            udm.setText(farmaco.getUnitaMisura());
+            controller.cambioFarmaco();
+        }
     }
     
 }
