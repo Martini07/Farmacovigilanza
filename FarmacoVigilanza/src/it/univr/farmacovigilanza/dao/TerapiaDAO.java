@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface TerapiaDAO {
     
-    public List<Terapia> getTerapie(int idPaziente, LocalDate dataInizio, LocalDate dataFine);
+    public List<Terapia> getTerapie(int idPaziente, LocalDate data);
     public int salvaTerapia(Terapia terapia);
     
     

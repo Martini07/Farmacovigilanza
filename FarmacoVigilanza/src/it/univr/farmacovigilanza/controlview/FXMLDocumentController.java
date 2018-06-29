@@ -11,6 +11,7 @@ import it.univr.farmacovigilanza.model.Farmacologo;
 import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
+import it.univr.farmacovigilanza.model.Segnalazione;
 import it.univr.farmacovigilanza.model.Terapia;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -403,10 +404,10 @@ public class FXMLDocumentController implements Initializable {
         if(sceltaReazioneAvversa.getValue() == null) return; //inserire reazione avversa
         LocalDate data = dataReazioneAvversa.getValue();
         if(data == null) return; //inserire data
-        if(terDAO == null ) terDAO = test.getTerapiaDAO();
-        List<Terapia> terapieAttive = terDAO.getTerapie(sceltaPaziente.getValue(), data, data);
-        //for(Terapia t: terapieAttive) System.out.println(t);
-        //add new segnalazione
+        
+        //TODO index reazione
+        test.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(1), LocalDate.now(), data), sceltaPaziente.getValue());
+        
         clear();
     }
     

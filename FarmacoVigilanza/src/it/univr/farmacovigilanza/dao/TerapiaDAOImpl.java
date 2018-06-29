@@ -1,6 +1,5 @@
 package it.univr.farmacovigilanza.dao;
 
-import it.univr.farmacovigilanza.model.FattoreRischio;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,21 +18,20 @@ import java.time.LocalDate;
 public class TerapiaDAOImpl implements TerapiaDAO {
 
     private static final String INS_TERAPIA = "INSERT INTO TERAPIA(IDFARMACO, DATA_INIZIO, DATA_FINE, DOSE, FREQUENZA, IDPAZIENTE) VALUES(?, ?, ?, ?, ?, ?)";
-    private static final String SEL_TERAPIA_PAZIENTE = "SELECT * FROM TERAPIA WHERE IDPAZIENTE = ? AND DATA_INIZIO >= ? AND DATA_FINE <= ?";
+    private static final String SEL_TERAPIA_PAZIENTE = "SELECT * FROM TERAPIA WHERE IDPAZIENTE = ? AND DATA_INIZIO <= ? AND ? <= DATA_FINE";
 
     @Override
-    public List<Terapia> getTerapie(int idPaziente, LocalDate dataInizio, LocalDate dataFine) {
+    public List<Terapia> getTerapie(int idPaziente, LocalDate data) {
         List<Terapia> terapie = new ArrayList();
         try {
             PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(SEL_TERAPIA_PAZIENTE);
             preparedStatement.setInt(1, idPaziente);
-            preparedStatement.setDate(2, Date.valueOf(dataInizio));
-            preparedStatement.setDate(3, Date.valueOf(dataFine));
+            preparedStatement.setDate(2, Date.valueOf(data));
+            preparedStatement.setDate(3, Date.valueOf(data));
             ResultSet rs = preparedStatement.executeQuery();
             DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
             FarmacoDAO farmacoDAO = daoFactory.getFarmacoDAO();
             while (rs.next()) {
-                System.out.println("Trovata una terapia");
                 terapie.add(new Terapia(rs.getInt("IDTERAPIA"),
                         farmacoDAO.getFarmaco(rs.getInt("IDFARMACO")),
                         rs.getDate("DATA_INIZIO").toLocalDate(),
