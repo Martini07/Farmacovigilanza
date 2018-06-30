@@ -1,5 +1,7 @@
 package it.univr.farmacovigilanza.controlview;
 
+import it.univr.farmacovigilanza.controlview.listener.FarmacoListener;
+import it.univr.farmacovigilanza.controlview.listener.PazienteTerapiaListener;
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.dao.FarmacoDAO;
@@ -10,8 +12,6 @@ import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.Terapia;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -126,18 +126,16 @@ public class InsertTerapyController implements Initializable{
         clean();
     }
     
+    private boolean compiled(){
+        return dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() & isValidFrequenza();
+    }
+    
     public Label getUdm(){
         return unitaMisura;
     }
     
     public ObservableList<Farmaco> getFarmaci(){
         return farmaci;
-    }
-    
-    private boolean compiled(){
-        boolean ris=true;
-        ris = (dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() & isValidFrequenza());
-        return ris;
     }
     
     private boolean isValidDose(){

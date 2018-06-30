@@ -1,23 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package it.univr.farmacovigilanza.controlview;
+package it.univr.farmacovigilanza.controlview.listener;
 
+import it.univr.farmacovigilanza.controlview.InsertTerapyController;
 import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.model.Paziente;
 import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ChoiceBox;
 
 
-public class  PazienteTerapiaListener<Integer> implements ChangeListener{
-    private InsertTerapyController controller;
+public class PazienteTerapiaListener<Integer> implements ChangeListener{
+    
+    private final InsertTerapyController controller;
     private PazienteDAO pazDao;
 
-    PazienteTerapiaListener(InsertTerapyController controller,PazienteDAO pazDao) {
+    public PazienteTerapiaListener(InsertTerapyController controller,PazienteDAO pazDao) {
         this.controller=controller;
         this.pazDao=pazDao;
     }

@@ -58,7 +58,7 @@ public class Farmaco implements Iterable{
 
     @Override
     public String toString() {
-        return "Farmaco{" + "id=" + id + ", nome=" + nome + ", descrizione=" + descrizione + ", dittaProduttrice=" + dittaProduttrice + ", codiceMinisteriale=" + codiceMinisteriale + ", principioAttivo=" + principioAttivo + ", quantita=" + quantita + ", unitaMisura=" + unitaMisura + '}';
+        return nome + " " + quantita + unitaMisura + ", " + dittaProduttrice + "\nCod. Ministeriale: " + codiceMinisteriale;
     }
 
     @Override

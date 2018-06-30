@@ -1,5 +1,7 @@
 package it.univr.farmacovigilanza.dao;
 
+import it.univr.farmacovigilanza.model.Farmaco;
+import it.univr.farmacovigilanza.model.FarmacoItem;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import it.univr.farmacovigilanza.model.Segnalazione;
 import it.univr.farmacovigilanza.model.Terapia;
@@ -7,7 +9,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,10 +24,12 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
     private static final String SEL_REAZIONI_AVVERSE = "SELECT * FROM REAZIONE";
     private static final String INS_SEGNALAZIONE = "INSERT INTO SEGNALAZIONE(IDREAZIONE, DATA_REAZIONE,	DATA_SEGNALAZIONE) VALUES (?, ?, ?)";
     private static final String INS_SEGNALAZIONE_TERAPIA = "INSERT INTO REAZIONE_TERAPIA(IDTERAPIA, IDSEGNALAZIONE) VALUES (?, ?)";
-    
+    private static final String SEL_SEGNALAZIONI = "SELECT R.*, S.*, F.* FROM REAZIONE R, SEGNALAZIONE S, REAZIONE_TERAPIA RT, TERAPIA T, CATALOGO C, FARMACO F WHERE R.IDREAZIONE = S.IDREAZIONE AND S.IDSEGNALAZIONE = RT.IDSEGNALAZIONE AND "
+            + "RT.IDTERAPIA = T.IDTERAPIA AND T.IDFARMACO = C.IDFARMACO AND C.IDFARMACO = F.IDFARMACO AND C.IDFARMACOLOGO = ?";
+   
     @Override
     public ObservableList<ReazioneAvversa> getReazioniAvverse() {
-        ObservableList<ReazioneAvversa> reazioni =FXCollections.observableArrayList();
+        ObservableList<ReazioneAvversa> reazioni = FXCollections.observableArrayList();
         try {
             PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_REAZIONI_AVVERSE);
             ResultSet rs = preparedStatement.executeQuery();
@@ -37,7 +40,7 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
                         rs.getInt("LIVELLO_GRAVITA")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(UserDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SegnalazioneDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return reazioni;
     }
@@ -65,9 +68,29 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(TerapiaDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SegnalazioneDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idSegnalazione;
     }
+
+    @Override
+    public ObservableList<Segnalazione> getSegnalazioni(int idFarmacologo) {
+        ObservableList<Segnalazione> segnalazioni = FXCollections.observableArrayList();
+        try {
+            PreparedStatement preparedStatement =  Connessione.getInstance().prepareStatement(SEL_SEGNALAZIONI);
+            preparedStatement.setInt(1, idFarmacologo);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                ReazioneAvversa reazione = new ReazioneAvversa(rs.getInt("IDREAZIONE"), rs.getString("R.NOME"), rs.getString("DESCRIZIONE"), rs.getInt("LIVELLO_GRAVITA"));
+                FarmacoItem farmaco = new FarmacoItem(rs.getInt("IDFARMACO"), rs.getString("F.NOME"), rs.getString("DESCRIZIONE"), rs.getString("DITTA_PRODUTTRICE"), rs.getString("COD_MINISTERIALE"), rs.getString("PRINCIPIO_ATTIVO"), rs.getInt("QUANTITA"), rs.getString("UNITA_MISURA"), null, null, null, null);
+                segnalazioni.add(new Segnalazione(rs.getInt("IDSEGNALAZIONE"), reazione, rs.getDate("DATA_SEGNALAZIONE").toLocalDate(), rs.getDate("DATA_REAZIONE").toLocalDate(), farmaco));
+            }			
+        } catch (SQLException ex) {
+            Logger.getLogger(SegnalazioneDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return segnalazioni;
+    }
+    
+   
     
 }

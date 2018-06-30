@@ -1,10 +1,12 @@
 package it.univr.farmacovigilanza.controlview;
 
+import it.univr.farmacovigilanza.controlview.listener.FarmacoAzioneListener;
+import it.univr.farmacovigilanza.controlview.listener.PazienteListener;
 import it.univr.farmacovigilanza.dao.DAOFactory;
-import it.univr.farmacovigilanza.dao.PazienteDAO;
 import it.univr.farmacovigilanza.dao.SegnalazioneDAO;
-import it.univr.farmacovigilanza.dao.TerapiaDAO;
-import it.univr.farmacovigilanza.dao.UserDAO;
+import it.univr.farmacovigilanza.model.Farmaco;
+import it.univr.farmacovigilanza.model.FarmacoItem;
+import it.univr.farmacovigilanza.model.FarmacoItem.Stato;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Farmacologo;
@@ -12,14 +14,12 @@ import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import it.univr.farmacovigilanza.model.Segnalazione;
-import it.univr.farmacovigilanza.model.Terapia;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,25 +30,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -99,41 +94,50 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn<Paziente, String> professione;
     @FXML
     private TableColumn<Paziente, List<FattoreRischio>> fattoriRischio;
-    private DAOFactory test =null;
-    private PazienteDAO pazDao = null;
-    private SegnalazioneDAO segDAO = null;
-    private TerapiaDAO terDAO = null;
-    private ObservableList<String> nomiReazioniAvverse = null;
-    private ObservableList<ReazioneAvversa> reazioniAvverse = null;
     @FXML
     private Button segnala;
+    
+    @FXML
+    private TableView<Segnalazione> segnalazioni;
+    @FXML
+    private TableColumn<Segnalazione, Integer> idSegnalazione;
+    @FXML
+    private TableColumn<Segnalazione, Farmaco> farmaco;
+    @FXML
+    private TableColumn<Segnalazione, ReazioneAvversa> reazioneAvversa;
+    @FXML
+    private TableColumn<Segnalazione, LocalDate> dataReazione;
+    @FXML
+    private TableColumn<Segnalazione, LocalDate> dataSegnalazione;
+    @FXML
+    private ComboBox<Stato> statoFarmaco;
+    @FXML
+    private Label farmacoSelezionato;
+    @FXML
+    private Button applica;
+    
+    private SegnalazioneDAO segDAO;
+    private DAOFactory daoFactory = null;
+    private ObservableList<String> nomiReazioniAvverse = null;
+    private ObservableList<ReazioneAvversa> reazioniAvverse = null;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        anno.setCellValueFactory(new PropertyValueFactory<>("annoNascita"));
-        provincia.setCellValueFactory(new PropertyValueFactory<>("provinciaRes"));
-        professione.setCellValueFactory(new PropertyValueFactory<>("professione"));
-        fattoriRischio.setCellValueFactory(new PropertyValueFactory<>("fattoriRischio"));
+        daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
     }    
 
     @FXML
     private void doLogin(ActionEvent event) throws UnsupportedEncodingException {
-        //try login
-        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserDAO userDao = test.getUserDAO();
-        Utente utente = userDao.getUtente(username.getText(), toHash(password.getText()));
+        Utente utente = daoFactory.getUserDAO().getUtente(username.getText(), toHash(password.getText()));
         if (utente != null) {
             if (utente instanceof Medico){
-                logged=(Medico) utente;
-                enableMedicoInterface();
-            } else { //Farmacologo
-                logged=(Farmacologo) utente;
+                logged = (Medico) utente;
+            } else {
+                logged = (Farmacologo) utente;
             }
-            //logged in
+            caricaInterfaccia();
             login.setText("Logged as " + utente.getNome() + " " + utente.getCognome());
             disableLoginFields();
-            //enable logout
             logoutButton.setVisible(true);
             logoutButton.setDisable(false);
         } else {
@@ -149,17 +153,11 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void doLogout(ActionEvent event) {
-        //deactivate logout button
         logoutButton.setVisible(false);
         logoutButton.setDisable(true);
         login.setText("");
-        
         enableLoginFields();
-        if(logged instanceof Medico){
-            //disable Medico interface
-            disableMedicoInterface();
-            
-        }
+        disabilitaInterfaccia();
         logged=null;
     }
     
@@ -183,44 +181,74 @@ public class FXMLDocumentController implements Initializable {
         loginButton.setDisable(true);
     }
     
-    private void enableMedicoInterface(){
-        pazientiButton.setDisable(false);
-        pazientiButton.setVisible(true);
-        if(pazDao ==null) pazDao = test.getPazienteDAO();
-        //Ottieni i miei pazienti
-        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(((Medico) logged).getIdUtente());
-        ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
-        for(Paziente p: mieiPazienti){
-            idPazienti.add(p.getId());
-        }
-        sceltaPaziente.setItems(idPazienti);
-        sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this));
-        
-        if(segDAO ==null){
-            //segnalazioni cercate una volta sola
-            segDAO = test.getSegnalazioneDAO();
-            reazioniAvverse = segDAO.getReazioniAvverse();
-            nomiReazioniAvverse = FXCollections.observableArrayList();
-            for(ReazioneAvversa r : reazioniAvverse){
-                nomiReazioniAvverse.add(r.getNome());
+    private void caricaInterfaccia(){
+        if (logged instanceof Medico){
+            id.setCellValueFactory(new PropertyValueFactory<>("id"));
+            anno.setCellValueFactory(new PropertyValueFactory<>("annoNascita"));
+            provincia.setCellValueFactory(new PropertyValueFactory<>("provinciaRes"));
+            professione.setCellValueFactory(new PropertyValueFactory<>("professione"));
+            fattoriRischio.setCellValueFactory(new PropertyValueFactory<>("fattoriRischio"));
+            
+            pazientiButton.setDisable(false);
+            pazientiButton.setVisible(true);
+            //Ottieni i miei pazienti
+            ObservableList<Paziente> mieiPazienti= daoFactory.getPazienteDAO().getPazienti(((Medico) logged).getIdUtente());
+            ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
+            for(Paziente p: mieiPazienti){
+                idPazienti.add(p.getId());
             }
-            sceltaReazioneAvversa.setItems(nomiReazioniAvverse);
+            sceltaPaziente.setItems(idPazienti);
+            sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this));
+
+            if(segDAO ==null){
+                //segnalazioni cercate una volta sola
+                segDAO = daoFactory.getSegnalazioneDAO();
+                reazioniAvverse = segDAO.getReazioniAvverse();
+                nomiReazioniAvverse = FXCollections.observableArrayList();
+                for (ReazioneAvversa reazione : reazioniAvverse){
+                    nomiReazioniAvverse.add(reazione.getNome());
+                }
+                sceltaReazioneAvversa.setItems(nomiReazioniAvverse);
+            }
+            enableSegnalazione(false);
+        } else {
+            idSegnalazione.setCellValueFactory(new PropertyValueFactory<>("id"));
+            farmaco.setCellValueFactory(new PropertyValueFactory<>("farmaco"));
+            reazioneAvversa.setCellValueFactory(new PropertyValueFactory<>("reazioneAvversa"));
+            dataReazione.setCellValueFactory(new PropertyValueFactory<>("dataReazione"));
+            dataSegnalazione.setCellValueFactory(new PropertyValueFactory<>("dataSegnalazione"));
+            
+            statoFarmaco.setItems(FXCollections.observableArrayList(Stato.values()));
+            
+            segnalazioni.getSelectionModel().selectedIndexProperty().addListener(new FarmacoAzioneListener<>(this));
+            segnalazioni.setVisible(true);
+            segnalazioni.setDisable(false);
+            ((Farmacologo) logged).setSegnalazioni(daoFactory.getSegnalazioneDAO().getSegnalazioni(logged.getIdUtente()));
+            segnalazioni.setItems(((Farmacologo) logged).getSegnalazioni());
         }
-        enableSegnalazione(false);
     }
 
-    private void disableMedicoInterface(){
-        pazientiButton.setDisable(true);
-        pazientiButton.setVisible(false);
-        grid.setVisible(false);
-        grid.setDisable(true);
-        segnalaPazienteButton.setDisable(true);
-        segnalaPazienteButton.setVisible(false);
-        terapiaPaziente.setDisable(true);
-        terapiaPaziente.setVisible(false);
-        disableSegnalazione();
-        grid.getItems().removeAll(grid.getItems());
-        sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
+    private void disabilitaInterfaccia(){
+        if (logged instanceof Medico) {
+            pazientiButton.setDisable(true);
+            pazientiButton.setVisible(false);
+            grid.setVisible(false);
+            grid.setDisable(true);
+            segnalaPazienteButton.setDisable(true);
+            segnalaPazienteButton.setVisible(false);
+            terapiaPaziente.setDisable(true);
+            terapiaPaziente.setVisible(false);
+            disableSegnalazione();
+            grid.getItems().removeAll(grid.getItems());
+            sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
+        } else {
+            statoFarmaco.setVisible(false);
+            farmacoSelezionato.setVisible(false);
+            applica.setVisible(false);
+            segnalazioni.setVisible(false);
+            segnalazioni.setDisable(true);
+            segnalazioni.getItems().removeAll(grid.getItems());
+        }
     }
     
     private void enableSegnalazione(boolean flag){
@@ -285,9 +313,7 @@ public class FXMLDocumentController implements Initializable {
         grid.setVisible(true);
         grid.setDisable(false);
         //listaPazienti.setOnMousePressed(new ListViewHandler(listaPazienti, this));
-        DAOFactory test = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        PazienteDAO pazDao = test.getPazienteDAO();
-        ObservableList<Paziente> mieiPazienti= pazDao.getPazienti(((Medico) logged).getIdUtente());
+        ObservableList<Paziente> mieiPazienti= daoFactory.getPazienteDAO().getPazienti(((Medico) logged).getIdUtente());
         grid.setItems(mieiPazienti);
     }
     
@@ -349,33 +375,6 @@ public class FXMLDocumentController implements Initializable {
             }
     }
     
-    public static Utente getUtente(){
-        return logged;
-    }
-
-    
-    public ComboBox<Integer> getSceltaPaziente(){
-        return sceltaPaziente;
-    }
-    
-    public ComboBox<String> getSceltaReazioneAvversa(){
-        return sceltaReazioneAvversa;
-    }
-    
-    public DatePicker getDataReazioneAvversa(){
-        return dataReazioneAvversa;
-    }
-    
-    public PazienteDAO getPazienteDAO(){
-        return pazDao;
-    }
-    public LocalDate getDataNascita(Paziente paziente){
-        if(paziente != null){
-            return LocalDate.of(paziente.getAnnoNascita(), 1, 1);
-        }
-        return null;
-    }
-    
     public void setDateFactory(DatePicker datePicker,LocalDate start,LocalDate end){
         CallBack<DatePicker, DateCell> dayCellFactory = new CallBack<>(start,end);
         datePicker.setDayCellFactory(dayCellFactory);
@@ -402,11 +401,11 @@ public class FXMLDocumentController implements Initializable {
     private void segnala(ActionEvent event){
         if(sceltaPaziente.getValue() == null) return; //inserire paziente
         if(sceltaReazioneAvversa.getValue() == null) return; //inserire reazione avversa
-        LocalDate data = dataReazioneAvversa.getValue();
-        if(data == null) return; //inserire data
+        LocalDate dataReazioneInserita = dataReazioneAvversa.getValue();
+        if(dataReazioneInserita == null) return; //inserire data
         
         //TODO index reazione
-        test.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(1), LocalDate.now(), data), sceltaPaziente.getValue());
+        daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(1), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
         
         clear();
     }
@@ -415,5 +414,49 @@ public class FXMLDocumentController implements Initializable {
         sceltaPaziente.setValue(null);
         sceltaReazioneAvversa.setValue(null);
         dataReazioneAvversa.setValue(null);
+    }
+    
+    @FXML
+    private void applicaAzione(ActionEvent event){
+        statoFarmaco.setVisible(false);
+        farmacoSelezionato.setVisible(false);
+        applica.setVisible(false);
+    }
+    
+    // GETTERS
+    
+    public static Utente getUtente(){
+        return logged;
+    }
+    
+    public ComboBox<Integer> getSceltaPaziente(){
+        return sceltaPaziente;
+    }
+    
+    public ComboBox<String> getSceltaReazioneAvversa(){
+        return sceltaReazioneAvversa;
+    }
+    
+    public DatePicker getDataReazioneAvversa(){
+        return dataReazioneAvversa;
+    }
+    
+    public LocalDate getDataNascita(Paziente paziente){
+        if (paziente != null){
+            return LocalDate.of(paziente.getAnnoNascita(), 1, 1);
+        }
+        return null;
+    }
+    
+    public ComboBox<Stato> getStatoFarmaco(){
+        return statoFarmaco;
+    }
+    
+    public Label getFarmacoSelezionato(){
+        return farmacoSelezionato;
+    }
+    
+    public Button getApplica(){
+        return applica;
     }
 }

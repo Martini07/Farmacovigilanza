@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.univr.farmacovigilanza.controlview;
 
 import java.time.LocalDate;
@@ -12,7 +7,8 @@ import javafx.scene.control.DateCell;
 public class MyDateCell extends DateCell{
     private final LocalDate min;
     private final LocalDate max;
-    MyDateCell(LocalDate min, LocalDate max){
+    
+    public MyDateCell(LocalDate min, LocalDate max){
         this.min=min;
         this.max=max;
     }

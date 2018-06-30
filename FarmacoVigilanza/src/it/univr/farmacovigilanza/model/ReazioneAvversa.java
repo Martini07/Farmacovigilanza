@@ -34,7 +34,7 @@ public class ReazioneAvversa {
     
     @Override
     public String toString(){
-        return nome+" "+livelloGravita+"\n"+descrizione+"\n";
+        return nome + ", gravità: " + livelloGravita + "\n" + descrizione + "\n";
     }
     
     @Override
