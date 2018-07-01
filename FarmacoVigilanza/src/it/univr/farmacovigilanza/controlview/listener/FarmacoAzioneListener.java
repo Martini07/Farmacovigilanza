@@ -17,12 +17,14 @@ public class FarmacoAzioneListener<Integer> implements ChangeListener {
 
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        Segnalazione segnalazioneSelezionata = ((Farmacologo) controller.getUtente()).getSegnalazioni().get((int) newValue);
-        if (segnalazioneSelezionata.getFarmaco().getStato() == null) {
-            controller.getStatoFarmaco().setVisible(true);
-            controller.getFarmacoSelezionato().setVisible(true);
-            controller.getFarmacoSelezionato().setText("Farmaco: ".concat(segnalazioneSelezionata.getFarmaco().toString()));
-            controller.getApplica().setVisible(true);
+        if(newValue!=null && (int) newValue!=-1){
+            Segnalazione segnalazioneSelezionata = ((Farmacologo) controller.getUtente()).getSegnalazioni().get((int) newValue);
+            if (segnalazioneSelezionata.getFarmaco().getStato() == null) {
+                controller.getStatoFarmaco().setVisible(true);
+                controller.getFarmacoSelezionato().setVisible(true);
+                controller.getFarmacoSelezionato().setText("Farmaco: ".concat(segnalazioneSelezionata.getFarmaco().toString()));
+                controller.getApplica().setVisible(true);
+            }
         }
     }
 }

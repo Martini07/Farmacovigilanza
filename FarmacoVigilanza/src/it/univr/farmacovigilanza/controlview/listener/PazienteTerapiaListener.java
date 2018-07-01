@@ -20,15 +20,17 @@ public class PazienteTerapiaListener<Integer> implements ChangeListener{
     
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        int idPaziente = controller.comboBoxGet((int) newValue);
-        Paziente paziente = pazDao.getPaziente(idPaziente);
-        controller.setPaziente(paziente);
-        controller.setDateFactory(controller.getInizio(), controller.getDataNascita(), LocalDate.now());
-        controller.setDateFactory(controller.getFine(),  controller.getDataNascita(), LocalDate.now());
-        controller.getInizio().setValue(null);
-        controller.getFine().setValue(null);
-        controller.getFine().setDisable(true);
-        controller.clean();
+        if(newValue!=null && (int) newValue!=-1){
+            int idPaziente = controller.comboBoxGet((int) newValue);
+            Paziente paziente = pazDao.getPaziente(idPaziente);
+            controller.setPaziente(paziente);
+            controller.setDateFactory(controller.getInizio(), controller.getDataNascita(), LocalDate.now());
+            controller.setDateFactory(controller.getFine(),  controller.getDataNascita(), LocalDate.now());
+            controller.getInizio().setValue(null);
+            controller.getFine().setValue(null);
+            controller.getFine().setDisable(true);
+            controller.clean();
+        }
     }
     
 }

@@ -15,7 +15,7 @@ public class FarmacoListener<String> implements ChangeListener{
     
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        if(newValue != null){
+        if(newValue!=null && (int) newValue != -1){
             int index = (int) newValue;
             Farmaco farmaco=controller.getFarmaci().get(index);
             controller.setFarmaco(farmaco);

@@ -59,5 +59,14 @@
         <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="340.0" minHeight="16" minWidth="69" visible="false" />
         <ComboBox fx:id="statoFarmaco" layoutX="230.0" layoutY="340.0" prefHeight="25.0" prefWidth="125.0" visible="false" />
         <Button fx:id="applica" layoutX="365.0" layoutY="340.0" mnemonicParsing="false" onAction="#applicaAzione" prefHeight="26.0" prefWidth="130.0" text="Applica Azione" visible="false" />
+      <ChoiceBox fx:id="filtraFarmaco" disable="true" layoutX="20.0" layoutY="23.0" prefHeight="25.0" prefWidth="130.0" visible="false" />
+      <Label fx:id="filtraFarmacoLabel" disable="true" layoutX="21.0" layoutY="8.0" text="farmaco:" visible="false" />
+      <Label fx:id="filtraGravitaLabel" disable="true" layoutX="155.0" layoutY="10.0" text="gravità" visible="false" />
+      <ChoiceBox fx:id="filtraGravita" disable="true" layoutX="155.0" layoutY="23.0" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="dataInizioLabel" disable="true" layoutX="252.0" layoutY="10.0" text="Inizio" visible="false" />
+      <DatePicker fx:id="dataInizio" disable="true" layoutX="252.0" layoutY="23.0" onAction="#dataInizio" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="dataFineLabel" disable="true" layoutX="351.0" layoutY="10.0" text="Fine" visible="false" />
+      <DatePicker fx:id="dataFine" disable="true" layoutX="354.0" layoutY="23.0" onAction="#dataFine" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="numeroRisultatiQuery" disable="true" layoutX="21.0" layoutY="306.0" visible="false" />
     </children>
 </AnchorPane>
