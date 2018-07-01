@@ -14,7 +14,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="674.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="674.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FarmacovigilanzaController">
     <children>
         <!-- LOGIN -->
         <Label fx:id="login" layoutX="289.0" layoutY="9.0" minHeight="16" minWidth="69" />
@@ -55,17 +55,17 @@
                 <TableColumn fx:id="dataSegnalazione" prefWidth="105.0" text="Data Segnalazione" />
             </columns>
         </TableView>
-        <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="340.0" minHeight="16" minWidth="69" />
-        <ComboBox fx:id="statoFarmaco" layoutX="23.0" layoutY="431.0" prefHeight="25.0" prefWidth="125.0" visible="false" />
-        <Button fx:id="applica" layoutX="177.0" layoutY="431.0" mnemonicParsing="false" onAction="#applicaAzione" prefHeight="26.0" prefWidth="130.0" text="Applica Azione" visible="false" />
-      <ChoiceBox fx:id="filtraFarmaco" disable="true" layoutX="21.0" layoutY="53.0" prefHeight="25.0" prefWidth="130.0" visible="false" />
-      <Label fx:id="filtraFarmacoLabel" disable="true" layoutX="23.0" layoutY="32.0" text="farmaco" visible="false" />
-      <Label fx:id="filtraGravitaLabel" disable="true" layoutX="166.0" layoutY="34.0" text="gravità" visible="false" />
-      <ChoiceBox fx:id="filtraGravita" disable="true" layoutX="162.0" layoutY="53.0" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="dataInizioLabel" disable="true" layoutX="277.0" layoutY="34.0" text="inizio" visible="false" />
-      <DatePicker fx:id="dataInizio" disable="true" layoutX="277.0" layoutY="53.0" onAction="#dataInizio" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="dataFineLabel" disable="true" layoutX="393.0" layoutY="32.0" text="fine" visible="false" />
-      <DatePicker fx:id="dataFine" disable="true" layoutX="393.0" layoutY="53.0" onAction="#dataFine" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="numeroRisultatiQuery" disable="true" layoutX="21.0" layoutY="402.0" />
+        <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="431.0" minHeight="16" minWidth="69" visible="false" />
+        <ComboBox fx:id="statoFarmaco" layoutX="230.0" layoutY="431.0" prefHeight="25.0" prefWidth="125.0" visible="false" />
+        <Button fx:id="applica" layoutX="365.0" layoutY="431.0" mnemonicParsing="false" onAction="#applicaAzione" prefHeight="26.0" prefWidth="130.0" text="Applica Azione" visible="false" />
+        <ComboBox fx:id="filtraFarmaco" disable="true" layoutX="21.0" layoutY="53.0" onAction="#changeFiltro" prefHeight="25.0" prefWidth="130.0" visible="false" />
+        <Label fx:id="filtraFarmacoLabel" disable="true" layoutX="23.0" layoutY="32.0" text="Farmaco:" visible="false" />
+        <Label fx:id="filtraGravitaLabel" disable="true" layoutX="166.0" layoutY="34.0" text="Gravità:" visible="false" />
+        <ComboBox fx:id="filtraGravita" disable="true" layoutX="162.0" layoutY="53.0" onAction="#changeFiltro" prefHeight="25.0" prefWidth="93.0" visible="false" />
+        <Label fx:id="dataInizioLabel" disable="true" layoutX="277.0" layoutY="34.0" text="Data Inizio:" visible="false" />
+        <DatePicker fx:id="dataInizio" disable="true" layoutX="277.0" layoutY="53.0" onAction="#changeDataInizio" prefHeight="25.0" prefWidth="93.0" visible="false" />
+        <Label fx:id="dataFineLabel" disable="true" layoutX="393.0" layoutY="32.0" text="Data Fine:" visible="false" />
+        <DatePicker fx:id="dataFine" disable="true" layoutX="393.0" layoutY="53.0" onAction="#changeFiltro" prefHeight="25.0" prefWidth="93.0" visible="false" />
+        <Label fx:id="numeroRisultatiQuery" disable="true" layoutX="21.0" layoutY="402.0" />
     </children>
 </AnchorPane>

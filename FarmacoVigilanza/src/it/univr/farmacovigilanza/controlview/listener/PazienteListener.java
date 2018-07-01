@@ -1,7 +1,7 @@
 
 package it.univr.farmacovigilanza.controlview.listener;
 
-import it.univr.farmacovigilanza.controlview.FXMLDocumentController;
+import it.univr.farmacovigilanza.controlview.FarmacovigilanzaController;
 import it.univr.farmacovigilanza.dao.DAOFactory;
 import it.univr.farmacovigilanza.model.Paziente;
 import java.time.LocalDate;
@@ -11,9 +11,9 @@ import javafx.beans.value.ObservableValue;
 
 public class PazienteListener<Integer> implements ChangeListener {
     
-    private final FXMLDocumentController controller;
+    private final FarmacovigilanzaController controller;
 
-    public PazienteListener(FXMLDocumentController controller) {
+    public PazienteListener(FarmacovigilanzaController controller) {
         this.controller=controller;
     }
 

@@ -8,9 +8,9 @@ public class Segnalazione {
     private final ReazioneAvversa reazioneAvversa;
     private final LocalDate dataSegnalazione;
     private final LocalDate dataReazione;
-    private final FarmacoItem farmaco;
+    private final Farmaco farmaco;
 
-    public Segnalazione(int id, ReazioneAvversa reazioneAvversa, LocalDate dataSegnalazione, LocalDate dataReazione, FarmacoItem farmaco) {
+    public Segnalazione(int id, ReazioneAvversa reazioneAvversa, LocalDate dataSegnalazione, LocalDate dataReazione, Farmaco farmaco) {
         this.id = id;
         this.reazioneAvversa = reazioneAvversa;
         this.dataSegnalazione = dataSegnalazione;
@@ -34,7 +34,7 @@ public class Segnalazione {
         return dataReazione;
     }
 
-    public FarmacoItem getFarmaco() {
+    public Farmaco getFarmaco() {
         return farmaco;
     }
 

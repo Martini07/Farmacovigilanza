@@ -1,7 +1,7 @@
 package it.univr.farmacovigilanza.dao;
 
 import it.univr.farmacovigilanza.model.Farmaco;
-import it.univr.farmacovigilanza.model.FarmacoItem;
+import it.univr.farmacovigilanza.model.Farmaco.Stato;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import it.univr.farmacovigilanza.model.Segnalazione;
 import it.univr.farmacovigilanza.model.Terapia;
@@ -24,8 +24,8 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
     private static final String SEL_REAZIONI_AVVERSE = "SELECT * FROM REAZIONE";
     private static final String INS_SEGNALAZIONE = "INSERT INTO SEGNALAZIONE(IDREAZIONE, DATA_REAZIONE,	DATA_SEGNALAZIONE) VALUES (?, ?, ?)";
     private static final String INS_SEGNALAZIONE_TERAPIA = "INSERT INTO REAZIONE_TERAPIA(IDTERAPIA, IDSEGNALAZIONE) VALUES (?, ?)";
-    private static final String SEL_SEGNALAZIONI = "SELECT R.*, S.*, F.* FROM REAZIONE R, SEGNALAZIONE S, REAZIONE_TERAPIA RT, TERAPIA T, CATALOGO C, FARMACO F WHERE R.IDREAZIONE = S.IDREAZIONE AND S.IDSEGNALAZIONE = RT.IDSEGNALAZIONE AND "
-            + "RT.IDTERAPIA = T.IDTERAPIA AND T.IDFARMACO = C.IDFARMACO AND C.IDFARMACO = F.IDFARMACO AND C.IDFARMACOLOGO = ?";
+    private static final String SEL_SEGNALAZIONI = "SELECT R.*, S.*, F.* FROM REAZIONE R, SEGNALAZIONE S, REAZIONE_TERAPIA RT, TERAPIA T, FARMACO F WHERE R.IDREAZIONE = S.IDREAZIONE AND S.IDSEGNALAZIONE = RT.IDSEGNALAZIONE AND "
+            + "RT.IDTERAPIA = T.IDTERAPIA AND T.IDFARMACO = F.IDFARMACO AND F.IDFARMACOLOGO = ?";
    
     @Override
     public ObservableList<ReazioneAvversa> getReazioniAvverse() {
@@ -82,7 +82,7 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 ReazioneAvversa reazione = new ReazioneAvversa(rs.getInt("IDREAZIONE"), rs.getString("R.NOME"), rs.getString("DESCRIZIONE"), rs.getInt("LIVELLO_GRAVITA"));
-                FarmacoItem farmaco = new FarmacoItem(rs.getInt("IDFARMACO"), rs.getString("F.NOME"), rs.getString("DESCRIZIONE"), rs.getString("DITTA_PRODUTTRICE"), rs.getString("COD_MINISTERIALE"), rs.getString("PRINCIPIO_ATTIVO"), rs.getInt("QUANTITA"), rs.getString("UNITA_MISURA"), null, null, null, null);
+                Farmaco farmaco = new Farmaco(rs.getInt("IDFARMACO"), rs.getString("F.NOME"), rs.getString("DESCRIZIONE"), rs.getString("DITTA_PRODUTTRICE"), rs.getString("COD_MINISTERIALE"), rs.getString("PRINCIPIO_ATTIVO"), rs.getInt("QUANTITA"), rs.getString("UNITA_MISURA"), Stato.values()[rs.getInt("STATO")]);
                 segnalazioni.add(new Segnalazione(rs.getInt("IDSEGNALAZIONE"), reazione, rs.getDate("DATA_SEGNALAZIONE").toLocalDate(), rs.getDate("DATA_REAZIONE").toLocalDate(), farmaco));
             }			
         } catch (SQLException ex) {
@@ -91,6 +91,6 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
         return segnalazioni;
     }
     
-   
+
     
 }

@@ -1,14 +1,10 @@
 package it.univr.farmacovigilanza.controlview;
 
 import it.univr.farmacovigilanza.controlview.listener.FarmacoAzioneListener;
-import it.univr.farmacovigilanza.controlview.listener.FarmacologoFarmacoListener;
-import it.univr.farmacovigilanza.controlview.listener.GravitaListener;
 import it.univr.farmacovigilanza.controlview.listener.PazienteListener;
 import it.univr.farmacovigilanza.dao.DAOFactory;
-import it.univr.farmacovigilanza.dao.SegnalazioneDAO;
 import it.univr.farmacovigilanza.model.Farmaco;
-import it.univr.farmacovigilanza.model.FarmacoItem;
-import it.univr.farmacovigilanza.model.FarmacoItem.Stato;
+import it.univr.farmacovigilanza.model.Farmaco.Stato;
 import it.univr.farmacovigilanza.model.Utente;
 import it.univr.farmacovigilanza.model.Medico;
 import it.univr.farmacovigilanza.model.Farmacologo;
@@ -36,12 +32,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -51,7 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public class FXMLDocumentController implements Initializable {
+public class FarmacovigilanzaController implements Initializable {
     private static Utente logged=null;
     @FXML
     private Label login;
@@ -116,19 +110,14 @@ public class FXMLDocumentController implements Initializable {
     private Label farmacoSelezionato;
     @FXML
     private Button applica;
-    
-    private SegnalazioneDAO segDAO;
-    private DAOFactory daoFactory = null;
-    private ObservableList<String> nomiReazioniAvverse = null;
-    private ObservableList<ReazioneAvversa> reazioniAvverse = null;
     @FXML
-    private ChoiceBox<String> filtraFarmaco;
+    private ComboBox<String> filtraFarmaco;
     @FXML
     private Label filtraFarmacoLabel;
     @FXML
     private Label filtraGravitaLabel;
     @FXML
-    private ChoiceBox<Integer> filtraGravita;
+    private ComboBox<Integer> filtraGravita;
     @FXML
     private Label dataInizioLabel;
     @FXML
@@ -139,8 +128,14 @@ public class FXMLDocumentController implements Initializable {
     private DatePicker dataFine;
     @FXML
     private Label numeroRisultatiQuery;
+    
+    private DAOFactory daoFactory = null;
+    private ObservableList<String> nomiReazioniAvverse = null;
+    private ObservableList<ReazioneAvversa> reazioniAvverse = null;
     private ObservableList<Farmaco> listaFarmaci=null;
     private ObservableList<String> nomeFarmaci=FXCollections.observableArrayList();
+    private int idFarmacoSelezionato = -1;
+            
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
@@ -213,17 +208,17 @@ public class FXMLDocumentController implements Initializable {
             pazientiButton.setVisible(true);
             //Ottieni i miei pazienti
             ObservableList<Paziente> mieiPazienti= daoFactory.getPazienteDAO().getPazienti(((Medico) logged).getIdUtente());
+            ((Medico) logged).setPazienti(mieiPazienti);
             ObservableList<Integer> idPazienti=FXCollections.observableArrayList();
-            for(Paziente p: mieiPazienti){
+            for (Paziente p: mieiPazienti){
                 idPazienti.add(p.getId());
             }
             sceltaPaziente.setItems(idPazienti);
             sceltaPaziente.getSelectionModel().selectedIndexProperty().addListener(new PazienteListener<>(this));
 
-            if(segDAO ==null){
+            if (reazioniAvverse == null){
                 //segnalazioni cercate una volta sola
-                segDAO = daoFactory.getSegnalazioneDAO();
-                reazioniAvverse = segDAO.getReazioniAvverse();
+                reazioniAvverse = daoFactory.getSegnalazioneDAO().getReazioniAvverse();
                 nomiReazioniAvverse = FXCollections.observableArrayList();
                 for (ReazioneAvversa reazione : reazioniAvverse){
                     nomiReazioniAvverse.add(reazione.getNome());
@@ -254,7 +249,6 @@ public class FXMLDocumentController implements Initializable {
             }
             filtraFarmaco.setVisible(true);
             filtraFarmaco.setDisable(false);
-            filtraFarmaco.getSelectionModel().selectedIndexProperty().addListener(new FarmacologoFarmacoListener<>(this));
             filtraFarmacoLabel.setVisible(true);
             filtraFarmacoLabel.setDisable(false);
             if(filtraGravita.getItems().isEmpty()){
@@ -263,7 +257,6 @@ public class FXMLDocumentController implements Initializable {
             }
             filtraGravita.setVisible(true);
             filtraGravita.setDisable(false);
-            filtraGravita.getSelectionModel().selectedIndexProperty().addListener(new GravitaListener<>(this));
             filtraGravitaLabel.setVisible(true);
             filtraGravitaLabel.setDisable(false);
             dataInizio.setVisible(true);
@@ -294,7 +287,9 @@ public class FXMLDocumentController implements Initializable {
             sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
         } else {
             statoFarmaco.setVisible(false);
+            statoFarmaco.setValue(null);
             farmacoSelezionato.setVisible(false);
+            farmacoSelezionato.setText(null);
             applica.setVisible(false);
             segnalazioni.setVisible(false);
             segnalazioni.setDisable(true);
@@ -388,8 +383,7 @@ public class FXMLDocumentController implements Initializable {
         disableSegnalazione();
         grid.setVisible(true);
         grid.setDisable(false);
-        ObservableList<Paziente> mieiPazienti= daoFactory.getPazienteDAO().getPazienti(((Medico) logged).getIdUtente());
-        grid.setItems(mieiPazienti);
+        grid.setItems(((Medico) logged).getPazienti());
     }
     
     public void enableSegnalazione(int id){
@@ -413,13 +407,14 @@ public class FXMLDocumentController implements Initializable {
         Paziente selected = grid.getSelectionModel().getSelectedItem();
         if(selected != null){
             try{
-                FXMLLoader loader =  new FXMLLoader(getClass().getResource("InsertTerapy.fxml"));
-                InsertTerapyController controller = new InsertTerapyController(new Pair<Medico,Paziente>((Medico) logged, selected));
+                FXMLLoader loader =  new FXMLLoader(getClass().getResource("InserimentoTerapia.fxml"));
+                InserimentoTerapiaController controller = new InserimentoTerapiaController(new Pair<Medico,Paziente>((Medico) logged, selected));
                 loader.setController(controller);
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
                 scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
                 Stage stage = new Stage();
+                stage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
                 stage.setTitle("Inserimento terapia");
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
@@ -433,7 +428,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void addPaziente(ActionEvent event) {
             try{
-                Parent root = FXMLLoader.load(getClass().getResource("InsertPatient.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("InserimentoPaziente.fxml"));
                 Stage stage = new Stage();
                 stage.getIcons().add(new Image(this.getClass().getResourceAsStream("logo.jpg")));
                 stage.setTitle("Inserimento paziente");
@@ -468,7 +463,7 @@ public class FXMLDocumentController implements Initializable {
             byte[] digest = messageDigest.digest(textData);
             hash = new BigInteger(digest).toString(16);
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FarmacovigilanzaController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return hash;
     }
@@ -501,9 +496,7 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
             return;
         }
-        
-        //TODO index reazione
-        daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(1), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
+        daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(sceltaReazioneAvversa.getSelectionModel().getSelectedIndex()), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
         clear();
     }
     
@@ -518,6 +511,41 @@ public class FXMLDocumentController implements Initializable {
         statoFarmaco.setVisible(false);
         farmacoSelezionato.setVisible(false);
         applica.setVisible(false);
+        daoFactory.getFarmacoDAO().aggiornaFarmaco(idFarmacoSelezionato, statoFarmaco.getValue());
+        idFarmacoSelezionato = -1;
+    }
+    
+    @FXML
+    private void changeDataInizio(ActionEvent event) {
+        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+        dataFine.setValue(null);
+        dataFine.setDisable(false);
+        applicaFiltri();
+    }
+    
+    @FXML
+    private void changeFiltro(ActionEvent event) {
+        applicaFiltri();
+    }
+    
+    public void applicaFiltri(){
+        Farmaco farmacoSel = null;
+        if (filtraFarmaco.getValue() != null)
+            farmacoSel = listaFarmaci.get(nomeFarmaci.indexOf(filtraFarmaco.getValue()));
+        int risultati = 0;
+        ObservableList<Segnalazione> segnalazioniDaMostrare = FXCollections.observableArrayList();
+        ObservableList<Segnalazione> segnalazioniFarmacologo = ((Farmacologo) logged).getSegnalazioni();
+        for (Segnalazione segnalazione : segnalazioniFarmacologo) {
+            if ((filtraGravita.getValue() == null || segnalazione.getReazioneAvversa().getLivelloGravita() >= filtraGravita.getValue()) &&
+                    (farmacoSel == null || segnalazione.getFarmaco().equals(farmacoSel)) &&
+                    (dataInizio.getValue() == null || segnalazione.getDataSegnalazione().isAfter(dataInizio.getValue())) &&
+                    (dataFine.getValue() == null || segnalazione.getDataSegnalazione().isBefore(dataFine.getValue()))) {
+                segnalazioniDaMostrare.add(segnalazione);
+                risultati++;
+            }
+        }
+        numeroRisultatiQuery.setText("Totale: " + risultati);
+        segnalazioni.setItems(segnalazioniDaMostrare);
     }
     
     // GETTERS
@@ -556,46 +584,8 @@ public class FXMLDocumentController implements Initializable {
     public Button getApplica(){
         return applica;
     }
-
-    @FXML
-    private void dataInizio(ActionEvent event) {
-        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
-        dataFine.setValue(null);
-        dataFine.setDisable(false);
-        //query con solo data inizio
-        
-    }
     
-    public ObservableList<Farmaco> getFarmaci(){
-        return listaFarmaci;
+    public void setIdFarmacoSelezionato(int idFarmacoSelezionato) {
+        this.idFarmacoSelezionato = idFarmacoSelezionato;
     }
-    
-    public ChoiceBox<Integer> getGravita(){
-        return filtraGravita;
-    }
-    
-    public DatePicker getDataInizio(){
-        return dataInizio;
-    }
-    public DatePicker getDataFine(){
-        return dataFine;
-    }
-    
-    public ChoiceBox<String> getFiltraFarmaco(){
-        return filtraFarmaco;
-    }
-    
-    public Farmaco getFarmaco(String farmaco){
-        return listaFarmaci.get(nomeFarmaci.indexOf(farmaco));
-    }
-    
-    public void setRisultatiQuery(String risultati){
-        numeroRisultatiQuery.setText(risultati);
-    }
-
-    @FXML
-    private void dataFine(ActionEvent event) {
-        //query con date inizio e fine
-    }
-
 }

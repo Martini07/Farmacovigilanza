@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.InsertPatientController">
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.InserimentoPazienteController">
    <children>
       <Label layoutX="70.0" layoutY="63.0" text="Anno nascita:" />
       <Label layoutX="70.0" layoutY="92.0" text="Provincia residenza:" />

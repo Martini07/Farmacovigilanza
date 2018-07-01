@@ -1,15 +1,15 @@
 package it.univr.farmacovigilanza.controlview.listener;
 
-import it.univr.farmacovigilanza.controlview.InsertTerapyController;
+import it.univr.farmacovigilanza.controlview.InserimentoTerapiaController;
 import it.univr.farmacovigilanza.model.Farmaco;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 public class FarmacoListener<String> implements ChangeListener{
     
-    private final InsertTerapyController controller;
+    private final InserimentoTerapiaController controller;
 
-    public FarmacoListener(InsertTerapyController controller) {
+    public FarmacoListener(InserimentoTerapiaController controller) {
         this.controller=controller;
     }
     

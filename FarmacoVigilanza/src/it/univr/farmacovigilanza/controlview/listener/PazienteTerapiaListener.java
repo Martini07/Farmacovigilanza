@@ -1,29 +1,34 @@
 package it.univr.farmacovigilanza.controlview.listener;
 
-import it.univr.farmacovigilanza.controlview.InsertTerapyController;
-import it.univr.farmacovigilanza.dao.PazienteDAO;
+import it.univr.farmacovigilanza.controlview.InserimentoTerapiaController;
 import it.univr.farmacovigilanza.model.Paziente;
 import java.time.LocalDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 
 
 public class PazienteTerapiaListener<Integer> implements ChangeListener{
     
-    private final InsertTerapyController controller;
-    private PazienteDAO pazDao;
+    private final InserimentoTerapiaController controller;
 
-    public PazienteTerapiaListener(InsertTerapyController controller,PazienteDAO pazDao) {
+    public PazienteTerapiaListener(InserimentoTerapiaController controller) {
         this.controller=controller;
-        this.pazDao=pazDao;
     }
     
     @Override
     public void changed(ObservableValue observable, Object oldValue, Object newValue) {
         if(newValue!=null && (int) newValue!=-1){
             int idPaziente = controller.comboBoxGet((int) newValue);
-            Paziente paziente = pazDao.getPaziente(idPaziente);
-            controller.setPaziente(paziente);
+            ObservableList<Paziente> pazienti = controller.getMedico().getPazienti();
+            Paziente pazienteSel = null;
+            for (Paziente paziente : pazienti) {
+                if (paziente.getId() == idPaziente){
+                    pazienteSel = paziente;
+                    break;
+                }
+            }
+            controller.setPaziente(pazienteSel);
             controller.setDateFactory(controller.getInizio(), controller.getDataNascita(), LocalDate.now());
             controller.setDateFactory(controller.getFine(),  controller.getDataNascita(), LocalDate.now());
             controller.getInizio().setValue(null);

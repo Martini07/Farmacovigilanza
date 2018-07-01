@@ -28,7 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 
-public class InsertPatientController implements Initializable{
+public class InserimentoPazienteController implements Initializable{
 
     @FXML
     private Button insertButton;
@@ -81,7 +81,7 @@ public class InsertPatientController implements Initializable{
     @FXML
     private void insertPatient(ActionEvent event) {
         //TODO mi aspetto la veda solo il Medico questa funz... serve il controllo instanceof Medico ?
-        Utente utente = FXMLDocumentController.getUtente();
+        Utente utente = FarmacovigilanzaController.getUtente();
         if (utente instanceof Medico){
             Medico m = (Medico) utente;
             List<FattoreRischio> fattoriRischio = getFattoriRischioSelezionati();

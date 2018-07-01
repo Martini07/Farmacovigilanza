@@ -12,8 +12,15 @@ public class Farmaco implements Iterable{
     private final String principioAttivo;
     private final int quantita;
     private final String unitaMisura;
+    private final Stato stato;
+    
+    public static enum Stato {
+        RITIRA,
+        CONTROLLA,
+        MONITORA
+    }
 
-    public Farmaco(int id, String nome, String descrizione, String dittaProduttrice, String codiceMinisteriale, String principioAttivo, int quantita, String unitaMisura) {
+    public Farmaco(int id, String nome, String descrizione, String dittaProduttrice, String codiceMinisteriale, String principioAttivo, int quantita, String unitaMisura, Stato stato) {
         this.id = id;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -22,6 +29,7 @@ public class Farmaco implements Iterable{
         this.principioAttivo = principioAttivo;
         this.quantita = quantita;
         this.unitaMisura = unitaMisura;
+        this.stato = stato;
     }
 
     public int getId() {
@@ -56,6 +64,10 @@ public class Farmaco implements Iterable{
         return unitaMisura;
     }
 
+    public Stato getStato() {
+        return stato;
+    }
+    
     @Override
     public String toString() {
         return nome + " " + quantita + unitaMisura + ", " + dittaProduttrice + "\nCod. Ministeriale: " + codiceMinisteriale;
