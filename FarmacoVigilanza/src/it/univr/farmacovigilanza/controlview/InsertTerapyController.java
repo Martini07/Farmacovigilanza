@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
@@ -127,7 +128,45 @@ public class InsertTerapyController implements Initializable{
     }
     
     private boolean compiled(){
-        return dataInizio.getValue()!= null && dataFine.getValue()!= null && sceltaPaziente.getValue()!=null && sceltaFarmaco.getValue()!=null && isValidDose() & isValidFrequenza();
+        LocalDate inizio=dataInizio.getValue();
+        LocalDate fine=dataFine.getValue();
+        int pazienteId=-1;
+        if(sceltaPaziente.getValue()!=null && sceltaPaziente.getValue()!=-1){
+            pazienteId=sceltaPaziente.getValue();
+        }
+        String farmacoSelected=null;
+        if(sceltaFarmaco.getValue()!=null && !(sceltaFarmaco.getValue().equals(""))){
+            farmacoSelected=sceltaFarmaco.getValue();
+        }
+        String msgErrore=null;
+        boolean ret=true;
+        if(pazienteId==-1){
+            ret=false;
+            msgErrore="Selezionare un paziente"; 
+        }if(ret && farmacoSelected==null){
+            ret=false;
+            msgErrore="Selezionare un farmaco";
+        }if(ret && !isValidDose()){
+            ret=false;
+            msgErrore="Inserire una dose valida"; 
+        }if(ret && !isValidFrequenza()){
+            ret=false;
+            msgErrore="Inserire una frequenza valida"; 
+        }if(ret && inizio==null){
+            ret=false;
+            msgErrore="Inserire data inizio terapia"; 
+        }if(ret && fine==null){
+            ret=false;
+            msgErrore="Inserire data fine terapia"; 
+        }if(!ret){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Messaggio di errore");
+            alert.setHeaderText("Errore nell'inserimento della terapia");
+            alert.setContentText(msgErrore);
+            alert.showAndWait();
+            return ret;
+        }
+        return ret;
     }
     
     public Label getUdm(){
@@ -140,7 +179,7 @@ public class InsertTerapyController implements Initializable{
     
     private boolean isValidDose(){
         String doseString = dose.getText();
-        if(doseString == null ){
+        if(doseString == null || doseString.equals("")){
             dose.clear();
             return false;
         }
@@ -154,7 +193,7 @@ public class InsertTerapyController implements Initializable{
     
     private boolean isValidFrequenza(){
         String frequenzaString = frequenza.getText();
-        if(frequenzaString == null ){
+        if(frequenzaString == null ||frequenzaString.equals("")){
             frequenza.clear();
             return false;
         }

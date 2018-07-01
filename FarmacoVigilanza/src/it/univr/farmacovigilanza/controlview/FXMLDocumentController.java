@@ -421,10 +421,11 @@ public class FXMLDocumentController implements Initializable {
                 InsertTerapyController controller = new InsertTerapyController(new Pair<Medico,Paziente>((Medico) logged, selected));
                 loader.setController(controller);
                 Parent root = loader.load();
-                
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
                 Stage stage = new Stage();
                 stage.setTitle("Inserimento terapia");
-                stage.setScene(new Scene(root));
+                stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
             }catch(Exception e){
@@ -478,14 +479,35 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void segnala(ActionEvent event){
-        if(sceltaPaziente.getValue() == null) return; //inserire paziente
-        if(sceltaReazioneAvversa.getValue() == null) return; //inserire reazione avversa
+        String msgErrore=null;
+        int pazienteId=-1;
+        if(sceltaPaziente.getValue()!=null && sceltaPaziente.getValue()!=-1){
+            pazienteId=sceltaPaziente.getValue();
+        }
+        String reazioneAvversaSelected=null;
+        if(sceltaReazioneAvversa.getValue() != null && !(sceltaReazioneAvversa.getValue().equals(""))){
+            reazioneAvversaSelected=sceltaReazioneAvversa.getValue();
+        }
         LocalDate dataReazioneInserita = dataReazioneAvversa.getValue();
-        if(dataReazioneInserita == null) return; //inserire data
+        
+        if(pazienteId==-1){
+            msgErrore="Selezionare un paziente";
+        }if(msgErrore==null && reazioneAvversaSelected==null){
+            msgErrore="Selezionare una reazione avversa";
+        }if(msgErrore==null && dataReazioneInserita==null){
+            msgErrore="Inserire una data";
+        }
+        if(msgErrore != null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Messaggio di errore");
+            alert.setHeaderText("Errore nell'inserimento della terapia");
+            alert.setContentText(msgErrore);
+            alert.showAndWait();
+            return;
+        }
         
         //TODO index reazione
         daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(1), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
-        
         clear();
     }
     
