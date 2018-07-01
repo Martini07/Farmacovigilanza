@@ -14,40 +14,39 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="470.0" prefWidth="674.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univr.farmacovigilanza.controlview.FXMLDocumentController">
     <children>
         <!-- LOGIN -->
-        <Label fx:id="login" layoutX="221.0" layoutY="18.0" minHeight="16" minWidth="69" />
-        <TextField fx:id="username" layoutX="175.0" layoutY="112.0" promptText="username" />
-        <Button fx:id="loginButton" layoutX="229.0" layoutY="210.0" mnemonicParsing="false" onAction="#doLogin" text="Login" />
-        <Button fx:id="logoutButton" disable="true" layoutX="441.0" layoutY="14.0" mnemonicParsing="false" onAction="#doLogout" text="Logout" visible="false" />
-        <PasswordField fx:id="password" layoutX="176.0" layoutY="159.0" promptText="password" />
+        <Label fx:id="login" layoutX="289.0" layoutY="9.0" minHeight="16" minWidth="69" />
+        <TextField fx:id="username" layoutX="252.0" layoutY="145.0" prefHeight="25.0" prefWidth="187.0" promptText="username" />
+        <Button fx:id="loginButton" layoutX="307.0" layoutY="302.0" mnemonicParsing="false" onAction="#doLogin" prefHeight="25.0" prefWidth="77.0" text="Login" />
+        <Button fx:id="logoutButton" disable="true" layoutX="599.0" layoutY="17.0" mnemonicParsing="false" onAction="#doLogout" text="Logout" visible="false" />
+        <PasswordField fx:id="password" layoutX="252.0" layoutY="209.0" prefHeight="25.0" prefWidth="187.0" promptText="password" />
         
         <!-- MEDICO -->
-        <Button fx:id="pazientiButton" disable="true" layoutX="76.0" layoutY="10.0" mnemonicParsing="false" onAction="#showListaPazienti" text="Pazienti" visible="false" />
-        <ListView fx:id="listaPazienti" disable="true" layoutX="11.0" layoutY="52.0" prefHeight="313.0" prefWidth="417.0" visible="false" />
-        <ComboBox fx:id="sceltaPaziente" disable="true" layoutX="255.0" layoutY="61.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-        <Label fx:id="pazienteLabel" disable="true" layoutX="78.0" layoutY="66.0" minHeight="16" minWidth="69" text="Paziente" visible="false" />
-        <Label fx:id="reazioneAvversaLabel" disable="true" layoutX="76.0" layoutY="114.0" minHeight="16" minWidth="69" text="Reazione Avversa" visible="false" />
-        <ComboBox fx:id="sceltaReazioneAvversa" disable="true" layoutX="254.0" layoutY="109.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-        <DatePicker fx:id="dataReazioneAvversa" disable="true" editable="false" layoutX="254.0" layoutY="157.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
-        <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="78.0" layoutY="162.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
-        <Button fx:id="segnalaPazienteButton" disable="true" layoutX="35.0" layoutY="16.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
-        <Button fx:id="terapiaPaziente" disable="true" layoutX="139.0" layoutY="17.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
-        <Button fx:id="aggiuntaPaziente" disable="true" layoutX="404.0" layoutY="62.0" mnemonicParsing="false" onAction="#addPaziente" text="+" visible="false" />
-        <TableView fx:id="grid" layoutX="19.0" layoutY="52.0" prefHeight="313.0" prefWidth="493.0" visible="false">
+        <Button fx:id="pazientiButton" disable="true" layoutX="150.0" layoutY="41.0" mnemonicParsing="false" onAction="#showListaPazienti" prefHeight="25.0" prefWidth="69.0" text="Pazienti" visible="false" />
+        <ComboBox fx:id="sceltaPaziente" disable="true" layoutX="362.0" layoutY="142.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+        <Label fx:id="pazienteLabel" disable="true" layoutX="181.0" layoutY="142.0" minHeight="16" minWidth="69" text="Paziente" visible="false" />
+        <Label fx:id="reazioneAvversaLabel" disable="true" layoutX="184.0" layoutY="201.0" minHeight="16" minWidth="69" text="Reazione Avversa" visible="false" />
+        <ComboBox fx:id="sceltaReazioneAvversa" disable="true" layoutX="362.0" layoutY="197.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+        <DatePicker fx:id="dataReazioneAvversa" disable="true" editable="false" layoutX="362.0" layoutY="263.0" prefHeight="25.0" prefWidth="136.0" visible="false" />
+        <Label fx:id="dataReazioneAvversaLabel" disable="true" layoutX="181.0" layoutY="267.0" minHeight="16" minWidth="69" text="Data Reazione Avversa" visible="false" />
+        <Button fx:id="segnalaPazienteButton" disable="true" layoutX="23.0" layoutY="29.0" mnemonicParsing="false" onAction="#segnalaPaziente" prefHeight="26.0" prefWidth="77.0" text="Segnala" visible="false" />
+        <Button fx:id="terapiaPaziente" disable="true" layoutX="139.0" layoutY="29.0" mnemonicParsing="false" onAction="#addTerapiaPaziente" prefHeight="26.0" prefWidth="77.0" text="Terapia" visible="false" />
+        <Button fx:id="aggiuntaPaziente" disable="true" layoutX="510.0" layoutY="147.0" mnemonicParsing="false" onAction="#addPaziente" text="+" visible="false" />
+        <TableView fx:id="grid" layoutX="19.0" layoutY="70.0" prefHeight="377.0" prefWidth="634.0" visible="false">
             <columns>
                 <TableColumn fx:id="id" prefWidth="40.0" text="ID" />
                 <TableColumn fx:id="anno" prefWidth="105.0" text="Anno nascita" />
                 <TableColumn fx:id="provincia" prefWidth="90.0" text="Residenza" />
                 <TableColumn fx:id="professione" prefWidth="102.0" text="Professione" />
-                <TableColumn fx:id="fattoriRischio" prefWidth="155.0" text="Fattori rischio" />
+                <TableColumn fx:id="fattoriRischio" prefWidth="296.0" text="Fattori rischio" />
             </columns>
         </TableView>
-        <Button fx:id="segnala" disable="true" layoutX="228.0" layoutY="302.0" mnemonicParsing="false" onAction="#segnala" text="Segnala" visible="false" />
+        <Button fx:id="segnala" disable="true" layoutX="322.0" layoutY="341.0" mnemonicParsing="false" onAction="#segnala" text="Segnala" visible="false" />
     
         <!-- FARMACOLOGO -->
-        <TableView fx:id="segnalazioni" layoutX="19.0" layoutY="52.0" prefHeight="250.0" prefWidth="493.0" visible="false">
+        <TableView fx:id="segnalazioni" layoutX="19.0" layoutY="85.0" prefHeight="315.0" prefWidth="634.0" visible="false">
             <columns>
                 <TableColumn fx:id="idSegnalazione" prefWidth="30.0" text="ID" />
                 <TableColumn fx:id="farmaco" prefWidth="140.0" text="Farmaco" />
@@ -56,17 +55,17 @@
                 <TableColumn fx:id="dataSegnalazione" prefWidth="105.0" text="Data Segnalazione" />
             </columns>
         </TableView>
-        <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="340.0" minHeight="16" minWidth="69" visible="false" />
-        <ComboBox fx:id="statoFarmaco" layoutX="230.0" layoutY="340.0" prefHeight="25.0" prefWidth="125.0" visible="false" />
-        <Button fx:id="applica" layoutX="365.0" layoutY="340.0" mnemonicParsing="false" onAction="#applicaAzione" prefHeight="26.0" prefWidth="130.0" text="Applica Azione" visible="false" />
-      <ChoiceBox fx:id="filtraFarmaco" disable="true" layoutX="20.0" layoutY="23.0" prefHeight="25.0" prefWidth="130.0" visible="false" />
-      <Label fx:id="filtraFarmacoLabel" disable="true" layoutX="21.0" layoutY="8.0" text="farmaco:" visible="false" />
-      <Label fx:id="filtraGravitaLabel" disable="true" layoutX="155.0" layoutY="10.0" text="gravità" visible="false" />
-      <ChoiceBox fx:id="filtraGravita" disable="true" layoutX="155.0" layoutY="23.0" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="dataInizioLabel" disable="true" layoutX="252.0" layoutY="10.0" text="Inizio" visible="false" />
-      <DatePicker fx:id="dataInizio" disable="true" layoutX="252.0" layoutY="23.0" onAction="#dataInizio" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="dataFineLabel" disable="true" layoutX="351.0" layoutY="10.0" text="Fine" visible="false" />
-      <DatePicker fx:id="dataFine" disable="true" layoutX="354.0" layoutY="23.0" onAction="#dataFine" prefHeight="25.0" prefWidth="93.0" visible="false" />
-      <Label fx:id="numeroRisultatiQuery" disable="true" layoutX="21.0" layoutY="306.0" visible="false" />
+        <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="340.0" minHeight="16" minWidth="69" />
+        <ComboBox fx:id="statoFarmaco" layoutX="23.0" layoutY="431.0" prefHeight="25.0" prefWidth="125.0" visible="false" />
+        <Button fx:id="applica" layoutX="177.0" layoutY="431.0" mnemonicParsing="false" onAction="#applicaAzione" prefHeight="26.0" prefWidth="130.0" text="Applica Azione" visible="false" />
+      <ChoiceBox fx:id="filtraFarmaco" disable="true" layoutX="21.0" layoutY="53.0" prefHeight="25.0" prefWidth="130.0" visible="false" />
+      <Label fx:id="filtraFarmacoLabel" disable="true" layoutX="23.0" layoutY="32.0" text="farmaco" visible="false" />
+      <Label fx:id="filtraGravitaLabel" disable="true" layoutX="166.0" layoutY="34.0" text="gravità" visible="false" />
+      <ChoiceBox fx:id="filtraGravita" disable="true" layoutX="162.0" layoutY="53.0" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="dataInizioLabel" disable="true" layoutX="277.0" layoutY="34.0" text="inizio" visible="false" />
+      <DatePicker fx:id="dataInizio" disable="true" layoutX="277.0" layoutY="53.0" onAction="#dataInizio" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="dataFineLabel" disable="true" layoutX="393.0" layoutY="32.0" text="fine" visible="false" />
+      <DatePicker fx:id="dataFine" disable="true" layoutX="393.0" layoutY="53.0" onAction="#dataFine" prefHeight="25.0" prefWidth="93.0" visible="false" />
+      <Label fx:id="numeroRisultatiQuery" disable="true" layoutX="21.0" layoutY="402.0" />
     </children>
 </AnchorPane>

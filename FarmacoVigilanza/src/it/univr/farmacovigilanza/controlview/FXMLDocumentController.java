@@ -86,8 +86,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TableView<Paziente> grid;
     @FXML
-    private ListView<?> listaPazienti;
-    @FXML
     private TableColumn<Paziente, Integer> id;
     @FXML
     private TableColumn<Paziente, Integer> anno;
@@ -158,7 +156,7 @@ public class FXMLDocumentController implements Initializable {
                 logged = (Farmacologo) utente;
             }
             caricaInterfaccia();
-            login.setText("Logged as " + utente.getNome() + " " + utente.getCognome());
+            login.setText("Benvenuto " + utente.getNome() + " " + utente.getCognome());
             disableLoginFields();
             logoutButton.setVisible(true);
             logoutButton.setDisable(false);
@@ -368,7 +366,6 @@ public class FXMLDocumentController implements Initializable {
         sceltaPaziente.setDisable(true);
         sceltaReazioneAvversa.setVisible(false);
         sceltaReazioneAvversa.setDisable(true);
-        //sceltaReazioneAvversa.getItems().removeAll(sceltaReazioneAvversa.getItems());
         dataReazioneAvversa.setVisible(false);
         dataReazioneAvversa.setDisable(true);
         aggiuntaPaziente.setVisible(false);
@@ -391,7 +388,6 @@ public class FXMLDocumentController implements Initializable {
         disableSegnalazione();
         grid.setVisible(true);
         grid.setDisable(false);
-        //listaPazienti.setOnMousePressed(new ListViewHandler(listaPazienti, this));
         ObservableList<Paziente> mieiPazienti= daoFactory.getPazienteDAO().getPazienti(((Medico) logged).getIdUtente());
         grid.setItems(mieiPazienti);
     }
