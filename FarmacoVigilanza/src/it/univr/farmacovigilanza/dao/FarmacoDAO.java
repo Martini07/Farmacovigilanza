@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 public interface FarmacoDAO {
     
     public ObservableList<Farmaco> getFarmaci();
+    public ObservableList<Farmaco> getFarmaci(int idFarmacologo);
     public Farmaco getFarmaco(int idFarmaco);
     public void aggiornaFarmaco(int idFarmaco, Stato stato);
     

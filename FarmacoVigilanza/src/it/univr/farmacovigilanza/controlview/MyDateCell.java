@@ -19,7 +19,7 @@ public class MyDateCell extends DateCell{
          if (min != null && item.isBefore(min)) {
             setDisable(true);
             setStyle("-fx-background-color: #ffc0cb;");
-        }else if (item.isAfter(max)) {
+        }else if (max!=null && item.isAfter(max)) {
             setDisable(true);
             setStyle("-fx-background-color: #ffc0cb;");
         }

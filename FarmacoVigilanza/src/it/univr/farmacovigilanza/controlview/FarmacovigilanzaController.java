@@ -18,6 +18,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -135,6 +136,8 @@ public class FarmacovigilanzaController implements Initializable {
     private ObservableList<Farmaco> listaFarmaci=null;
     private ObservableList<String> nomeFarmaci=FXCollections.observableArrayList();
     private int idFarmacoSelezionato = -1;
+    @FXML
+    private Button cleanFilter;
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -241,12 +244,9 @@ public class FarmacovigilanzaController implements Initializable {
             ((Farmacologo) logged).setSegnalazioni(daoFactory.getSegnalazioneDAO().getSegnalazioni(logged.getIdUtente()));
             segnalazioni.setItems(((Farmacologo) logged).getSegnalazioni());
             numeroRisultatiQuery.setText("Totale: "+segnalazioni.getItems().size());
-            if(listaFarmaci==null){
-                //inserisci i farmaci solo la prima volta
-                listaFarmaci=daoFactory.getFarmacoDAO().getFarmaci();
-                for(Farmaco f: listaFarmaci) nomeFarmaci.add(f.getNome()+" ("+f.getQuantita()+" "+f.getUnitaMisura()+") - "+f.getDittaProduttrice());
-                filtraFarmaco.setItems(nomeFarmaci);
-            }
+            listaFarmaci=daoFactory.getFarmacoDAO().getFarmaci(((Farmacologo)logged).getIdUtente());
+            for(Farmaco f: listaFarmaci) nomeFarmaci.add(f.getNome()+" ("+f.getQuantita()+" "+f.getUnitaMisura()+") - "+f.getDittaProduttrice());
+            filtraFarmaco.setItems(nomeFarmaci);
             filtraFarmaco.setVisible(true);
             filtraFarmaco.setDisable(false);
             filtraFarmacoLabel.setVisible(true);
@@ -269,6 +269,8 @@ public class FarmacovigilanzaController implements Initializable {
             dataFineLabel.setDisable(false);
             numeroRisultatiQuery.setVisible(true);
             numeroRisultatiQuery.setDisable(false);
+            cleanFilter.setVisible(true);
+            cleanFilter.setDisable(false);
         }
     }
 
@@ -294,7 +296,6 @@ public class FarmacovigilanzaController implements Initializable {
             segnalazioni.setVisible(false);
             segnalazioni.setDisable(true);
             segnalazioni.getItems().removeAll(grid.getItems());
-            
             filtraFarmaco.setVisible(false);
             filtraFarmaco.setDisable(true);
             filtraFarmaco.setValue(null);
@@ -318,6 +319,8 @@ public class FarmacovigilanzaController implements Initializable {
             numeroRisultatiQuery.setText(null);
             numeroRisultatiQuery.setVisible(false);
             numeroRisultatiQuery.setDisable(true);
+            cleanFilter.setVisible(false);
+            cleanFilter.setDisable(true);
         }
     }
     
@@ -440,6 +443,11 @@ public class FarmacovigilanzaController implements Initializable {
                 //update choicebox with new pazienti
                 ObservableList<Integer> idInseriti = (ObservableList<Integer>) stage.getUserData();
                 sceltaPaziente.getItems().addAll(idInseriti);
+                List<Paziente> pazientiInseriti=new ArrayList<>();
+                for(int idPaziente : idInseriti){
+                    pazientiInseriti.add(daoFactory.getPazienteDAO().getPaziente(idPaziente));
+                }
+                ((Medico) logged).aggiungiPazienti(pazientiInseriti);
                 enableSegnalazione(idInseriti.get(idInseriti.size()-1));
             }catch(Exception e){
                 System.out.println("Creazione finestra: "+e);
@@ -587,5 +595,14 @@ public class FarmacovigilanzaController implements Initializable {
     
     public void setIdFarmacoSelezionato(int idFarmacoSelezionato) {
         this.idFarmacoSelezionato = idFarmacoSelezionato;
+    }
+
+    @FXML
+    private void cleanFilter(ActionEvent event) {
+        filtraFarmaco.setValue(null);
+        filtraGravita.setValue(null);
+        dataInizio.setValue(null);
+        dataFine.setValue(null);
+        applicaFiltri();
     }
 }

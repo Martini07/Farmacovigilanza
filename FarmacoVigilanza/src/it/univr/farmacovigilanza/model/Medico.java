@@ -19,5 +19,7 @@ public class Medico extends Utente {
     public void setPazienti(List<Paziente> pazienti) {
         this.pazienti = pazienti;
     }
-    
+    public void aggiungiPazienti(List<Paziente> pazienti){
+        this.pazienti.addAll(pazienti);
+    }
 }

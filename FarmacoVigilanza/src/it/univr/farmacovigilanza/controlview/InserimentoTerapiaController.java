@@ -67,7 +67,7 @@ public class InserimentoTerapiaController implements Initializable{
         if( paziente != null){
             sceltaPaziente.setValue(paziente.getId());
             setDateFactory(dataInizio,getDataNascita(),LocalDate.now());
-            setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+            setDateFactory(dataFine,dataInizio.getValue(),null);
         }
         //inserimento farmaci
         farmaci = daoFactory.getFarmacoDAO().getFarmaci();
@@ -115,7 +115,7 @@ public class InserimentoTerapiaController implements Initializable{
     
     @FXML
     private void dataInizio(ActionEvent event) {
-        setDateFactory(dataFine,dataInizio.getValue(),LocalDate.now());
+        setDateFactory(dataFine,dataInizio.getValue(),null);
         if(dataFine.isDisable()){
             dataFine.setDisable(false);
         }
