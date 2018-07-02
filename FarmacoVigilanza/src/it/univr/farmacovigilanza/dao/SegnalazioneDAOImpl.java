@@ -49,24 +49,27 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
     public int salvaSegnalazione(Segnalazione segnalazione, int idPaziente) {
         int idSegnalazione = -1;
         try {
-            PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(INS_SEGNALAZIONE, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, segnalazione.getReazioneAvversa().getId());
-            preparedStatement.setDate(2, Date.valueOf(segnalazione.getDataReazione()));
-            preparedStatement.setDate(3, Date.valueOf(segnalazione.getDataSegnalazione()));
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            rs.next();
-            idSegnalazione = rs.getInt(1);
-            
             DAOFactory daoFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
             List<Terapia> terapieAttive = daoFactory.getTerapiaDAO().getTerapie(idPaziente, segnalazione.getDataReazione());
-            preparedStatement = Connessione.getInstance().prepareStatement(INS_SEGNALAZIONE_TERAPIA);
-            for (Terapia terapia : terapieAttive) {
-                 preparedStatement.setInt(1, terapia.getId());
-                 preparedStatement.setInt(2, idSegnalazione);
-                 preparedStatement.executeUpdate();
+            if (terapieAttive.size() > 0) {
+                PreparedStatement preparedStatement = Connessione.getInstance().prepareStatement(INS_SEGNALAZIONE, PreparedStatement.RETURN_GENERATED_KEYS);
+                preparedStatement.setInt(1, segnalazione.getReazioneAvversa().getId());
+                preparedStatement.setDate(2, Date.valueOf(segnalazione.getDataReazione()));
+                preparedStatement.setDate(3, Date.valueOf(segnalazione.getDataSegnalazione()));
+                preparedStatement.executeUpdate();
+                ResultSet rs = preparedStatement.getGeneratedKeys();
+                rs.next();
+                idSegnalazione = rs.getInt(1);
+
+                preparedStatement = Connessione.getInstance().prepareStatement(INS_SEGNALAZIONE_TERAPIA);
+                for (Terapia terapia : terapieAttive) {
+                     preparedStatement.setInt(1, terapia.getId());
+                     preparedStatement.setInt(2, idSegnalazione);
+                     preparedStatement.executeUpdate();
+                }
+            } else {
+                idSegnalazione = -2;
             }
-            
         } catch (SQLException ex) {
             Logger.getLogger(SegnalazioneDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -422,8 +422,8 @@ public class FarmacovigilanzaController implements Initializable {
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
-            }catch(Exception e){
-                System.err.println("Creazione finestra: "+e);
+            }catch(Exception ex){
+                Logger.getLogger(FarmacovigilanzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -449,8 +449,8 @@ public class FarmacovigilanzaController implements Initializable {
                 }
                 ((Medico) logged).aggiungiPazienti(pazientiInseriti);
                 enableSegnalazione(idInseriti.get(idInseriti.size()-1));
-            }catch(Exception e){
-                System.out.println("Creazione finestra: "+e);
+            }catch(Exception ex){
+                Logger.getLogger(FarmacovigilanzaController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
     
@@ -496,16 +496,21 @@ public class FarmacovigilanzaController implements Initializable {
         }if(msgErrore==null && dataReazioneInserita==null){
             msgErrore="Inserire una data";
         }
-        if(msgErrore != null){
+        if (msgErrore == null) {
+            int result = daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(sceltaReazioneAvversa.getSelectionModel().getSelectedIndex()), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
+            if (result == -2){
+                msgErrore = "Non sono presenti terapie attive alla data indicata";
+            } else {
+                clear();
+            }
+        }
+        if(msgErrore != null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Messaggio di errore");
             alert.setHeaderText("Errore nell'inserimento della terapia");
             alert.setContentText(msgErrore);
             alert.showAndWait();
-            return;
         }
-        daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(sceltaReazioneAvversa.getSelectionModel().getSelectedIndex()), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
-        clear();
     }
     
     private void clear(){
