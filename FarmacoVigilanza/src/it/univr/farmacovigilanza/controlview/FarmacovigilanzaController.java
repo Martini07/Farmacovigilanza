@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +147,7 @@ public class FarmacovigilanzaController implements Initializable {
 
     @FXML
     private void doLogin(ActionEvent event) throws UnsupportedEncodingException {
-        Utente utente = daoFactory.getUserDAO().getUtente(username.getText(), toHash(password.getText()));
+        Utente utente = daoFactory.getUserDAO().getUtente(username.getText(), Utility.toHash(password.getText()));
         if (utente != null) {
             if (utente instanceof Medico){
                 logged = (Medico) utente;
@@ -271,6 +272,7 @@ public class FarmacovigilanzaController implements Initializable {
             numeroRisultatiQuery.setDisable(false);
             cleanFilter.setVisible(true);
             cleanFilter.setDisable(false);
+            mostraMessaggiInformativi();
         }
     }
 
@@ -463,19 +465,6 @@ public class FarmacovigilanzaController implements Initializable {
         return sceltaPaziente.getItems().get(index);
     }
 
-    private String toHash(String text) {
-        String hash = null;
-        try {
-            byte[] textData = text.getBytes("UTF-8");
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            byte[] digest = messageDigest.digest(textData);
-            hash = new BigInteger(digest).toString(16);
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-            Logger.getLogger(FarmacovigilanzaController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return hash;
-    }
-
     @FXML
     private void segnala(ActionEvent event){
         String msgErrore=null;
@@ -561,6 +550,34 @@ public class FarmacovigilanzaController implements Initializable {
         segnalazioni.setItems(segnalazioniDaMostrare);
     }
     
+    @FXML
+    private void cleanFilter(ActionEvent event) {
+        filtraFarmaco.setValue(null);
+        filtraGravita.setValue(null);
+        dataInizio.setValue(null);
+        dataFine.setValue(null);
+        applicaFiltri();
+    }
+    
+    private void mostraMessaggiInformativi() {
+        int numeroSegnalazioniSettimana = Utility.getNumeroSegnalazioniSettimana((Farmacologo) logged);
+        if (numeroSegnalazioniSettimana >= 50 || LocalDate.now().getDayOfWeek().equals(DayOfWeek.SATURDAY) || LocalDate.now().getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Messaggio informativo");
+            alert.setHeaderText("Segnalazioni settimana");
+            alert.setContentText("Le segnalazioni della settimana corrente sono: " + numeroSegnalazioniSettimana);
+            alert.showAndWait();
+        }
+        List<Farmaco> farmaciDaSegnalare = Utility.getFarmaciDaSegnalare((Farmacologo) logged);
+        for (Farmaco farmacoSegnalato : farmaciDaSegnalare) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Attenzione");
+            alert.setHeaderText("Il seguente farmaco è stato segnalato più di 10 volte nell'anno corrente,\n causando reazioni di gravità maggiore del terzo livello");
+            alert.setContentText(farmacoSegnalato.toString());
+            alert.showAndWait();
+        }
+    }
+    
     // GETTERS
     
     public static Utente getUtente(){
@@ -601,13 +618,5 @@ public class FarmacovigilanzaController implements Initializable {
     public void setIdFarmacoSelezionato(int idFarmacoSelezionato) {
         this.idFarmacoSelezionato = idFarmacoSelezionato;
     }
-
-    @FXML
-    private void cleanFilter(ActionEvent event) {
-        filtraFarmaco.setValue(null);
-        filtraGravita.setValue(null);
-        dataInizio.setValue(null);
-        dataFine.setValue(null);
-        applicaFiltri();
-    }
+    
 }

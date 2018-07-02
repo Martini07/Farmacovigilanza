@@ -94,6 +94,4 @@ public class SegnalazioneDAOImpl implements SegnalazioneDAO {
         return segnalazioni;
     }
     
-
-    
 }
