@@ -24,7 +24,7 @@ public class FarmacoAzioneListener<Integer> implements ChangeListener {
             controller.setIdFarmacoSelezionato(farmacoSelezionato.getId());
             controller.getStatoFarmaco().setVisible(true);
             controller.getFarmacoSelezionato().setVisible(true);
-            controller.getFarmacoSelezionato().setText(farmacoSelezionato.getNome());
+            controller.getFarmacoSelezionato().setText("Farmaco: " + farmacoSelezionato.getNome());
             controller.getApplica().setVisible(true);
         }
     }
