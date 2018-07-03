@@ -49,10 +49,10 @@
         <TableView fx:id="segnalazioni" layoutX="19.0" layoutY="91.0" prefHeight="315.0" prefWidth="634.0" visible="false">
             <columns>
                 <TableColumn fx:id="idSegnalazione" prefWidth="30.0" text="ID" />
-                <TableColumn fx:id="farmaco" prefWidth="140.0" text="Farmaco" />
-                <TableColumn fx:id="reazioneAvversa" prefWidth="120.0" text="Reazione Avversa" />
-                <TableColumn fx:id="dataReazione" prefWidth="105.0" text="Data Reazione" />
-                <TableColumn fx:id="dataSegnalazione" prefWidth="105.0" text="Data Segnalazione" />
+                <TableColumn fx:id="farmaco" prefWidth="202.0" text="Farmaco" />
+                <TableColumn fx:id="reazioneAvversa" prefWidth="157.0" text="Reazione Avversa" />
+                <TableColumn fx:id="dataReazione" prefWidth="110.0" text="Data Reazione" />
+                <TableColumn fx:id="dataSegnalazione" prefWidth="134.0" text="Data Segnalazione" />
             </columns>
         </TableView>
         <Label fx:id="farmacoSelezionato" layoutX="20.0" layoutY="431.0" minHeight="16" minWidth="69" visible="false" />

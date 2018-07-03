@@ -1,6 +1,7 @@
 package it.univr.farmacovigilanza.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Segnalazione {
     
@@ -9,13 +10,15 @@ public class Segnalazione {
     private final LocalDate dataSegnalazione;
     private final LocalDate dataReazione;
     private final Farmaco farmaco;
-
-    public Segnalazione(int id, ReazioneAvversa reazioneAvversa, LocalDate dataSegnalazione, LocalDate dataReazione, Farmaco farmaco) {
+    private final List<Terapia> terapie;
+    
+    public Segnalazione(int id, ReazioneAvversa reazioneAvversa, LocalDate dataSegnalazione, LocalDate dataReazione, Farmaco farmaco, List<Terapia> terapie) {
         this.id = id;
         this.reazioneAvversa = reazioneAvversa;
         this.dataSegnalazione = dataSegnalazione;
         this.dataReazione = dataReazione;
         this.farmaco = farmaco;
+        this.terapie = terapie;
     }
 
     public int getId() {
@@ -38,6 +41,10 @@ public class Segnalazione {
         return farmaco;
     }
 
+    public List<Terapia> getTerapie(){
+        return terapie;
+    }
+    
     @Override
     public String toString() {
         return "Segnalazione{" + "id=" + id + ", reazioneAvversa=" + reazioneAvversa + ", dataSegnalazione=" + dataSegnalazione + ", dataReazione=" + dataReazione + '}';

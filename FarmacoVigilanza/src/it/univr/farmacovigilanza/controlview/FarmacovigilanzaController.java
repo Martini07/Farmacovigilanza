@@ -12,6 +12,7 @@ import it.univr.farmacovigilanza.model.FattoreRischio;
 import it.univr.farmacovigilanza.model.Paziente;
 import it.univr.farmacovigilanza.model.ReazioneAvversa;
 import it.univr.farmacovigilanza.model.Segnalazione;
+import it.univr.farmacovigilanza.model.Terapia;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URL;
@@ -238,7 +239,10 @@ public class FarmacovigilanzaController implements Initializable {
             dataSegnalazione.setCellValueFactory(new PropertyValueFactory<>("dataSegnalazione"));
             
             statoFarmaco.setItems(FXCollections.observableArrayList(Stato.values()));
-            
+            statoFarmaco.setDisable(false);
+            farmacoSelezionato.setDisable(false);
+            farmacoSelezionato.setText(null);
+            applica.setDisable(false);
             segnalazioni.getSelectionModel().selectedIndexProperty().addListener(new FarmacoAzioneListener<>(this));
             segnalazioni.setVisible(true);
             segnalazioni.setDisable(false);
@@ -291,10 +295,13 @@ public class FarmacovigilanzaController implements Initializable {
             sceltaPaziente.getItems().removeAll(sceltaPaziente.getItems());
         } else {
             statoFarmaco.setVisible(false);
+            statoFarmaco.setDisable(true);
             statoFarmaco.setValue(null);
             farmacoSelezionato.setVisible(false);
+            farmacoSelezionato.setDisable(true);
             farmacoSelezionato.setText(null);
             applica.setVisible(false);
+            applica.setDisable(true);
             segnalazioni.setVisible(false);
             segnalazioni.setDisable(true);
             segnalazioni.getItems().removeAll(grid.getItems());
@@ -486,10 +493,13 @@ public class FarmacovigilanzaController implements Initializable {
             msgErrore="Inserire una data";
         }
         if (msgErrore == null) {
-            int result = daoFactory.getSegnalazioneDAO().salvaSegnalazione(new Segnalazione(-1, reazioniAvverse.get(sceltaReazioneAvversa.getSelectionModel().getSelectedIndex()), LocalDate.now(), dataReazioneInserita, null), sceltaPaziente.getValue());
-            if (result == -2){
+            List<Terapia> terapieAttive=daoFactory.getTerapiaDAO().getTerapie(pazienteId, dataReazioneInserita);
+            if (terapieAttive.isEmpty()){
                 msgErrore = "Non sono presenti terapie attive alla data indicata";
+                dataReazioneAvversa.setValue(null);
             } else {
+                Segnalazione segnalazione = new Segnalazione(-1,reazioniAvverse.get(sceltaReazioneAvversa.getSelectionModel().getSelectedIndex()), LocalDate.now(), dataReazioneInserita,null,terapieAttive);
+                int idsegnalazione=daoFactory.getSegnalazioneDAO().salvaSegnalazione(segnalazione);
                 clear();
             }
         }
@@ -548,6 +558,11 @@ public class FarmacovigilanzaController implements Initializable {
         }
         numeroRisultatiQuery.setText("Totale: " + risultati);
         segnalazioni.setItems(segnalazioniDaMostrare);
+         if(farmacoSel!=null){
+            farmacoSelezionato.setText(farmacoSel.getNome());
+        }else{
+            farmacoSelezionato.setText(null);
+        }
     }
     
     @FXML
@@ -617,6 +632,10 @@ public class FarmacovigilanzaController implements Initializable {
     
     public void setIdFarmacoSelezionato(int idFarmacoSelezionato) {
         this.idFarmacoSelezionato = idFarmacoSelezionato;
+    }
+    
+    public List<Segnalazione> getSegnalazioni(){
+        return segnalazioni.getItems();
     }
     
 }

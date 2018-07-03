@@ -11,7 +11,7 @@ import javafx.collections.ObservableList;
 public interface SegnalazioneDAO {
     
     public ObservableList<ReazioneAvversa> getReazioniAvverse();
-    public int salvaSegnalazione(Segnalazione segnalazione, int idPaziente);
+    public int salvaSegnalazione(Segnalazione segnalazione);
     public ObservableList<Segnalazione> getSegnalazioni(int idFarmacologo);
     
 }
